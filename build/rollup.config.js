@@ -2,12 +2,16 @@ import createDefaultConfig from '@open-wc/building-rollup/modern-and-legacy-conf
 import commonjs from 'rollup-plugin-commonjs';
 import rimraf from 'rimraf';
 import runCmd from './plugin/rollup-plugin-run-command';
+import {terser} from 'rollup-plugin-terser';
 
 
 async function getRollUpConfig() {
 	const serve = process.env['serve'] || false;
 	const target = process.env['target'] || 'dev';
+	const production = !process.env['ROLLUP_WATCH'];
+	
 	const config = await import(`./config/${target}_config.js`);
+	
 	
 	const rollUpConfigs = createDefaultConfig({
 		input: './src/index.html',
@@ -22,16 +26,21 @@ async function getRollUpConfig() {
 		...rollUpConfig,
 		
 		plugins: [
-			...rollUpConfig.plugins,
+			...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
 			
 			commonjs(),
+			production && terser({
+				mangle: {
+					properties: {
+						regex: /^_/,
+					},
+				},
+			}),
 			
-			...serve ? [
-				runCmd({
-					cmd: `http-server ./build/src/dev/`,
-					runOnce: true,
-				}),
-			] : [],
+			serve && runCmd({
+				cmd: `http-server ./build/src/dev/`,
+				runOnce: true,
+			}),
 		],
 		
 		'onwarn'(warning, rollupWarn) {
