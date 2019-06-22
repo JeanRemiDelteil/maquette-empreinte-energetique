@@ -26,7 +26,7 @@ class AppMain extends LitElement {
 </style>
 
 <main>
-	
+	Hey !!
 </main>
 `;
 	}

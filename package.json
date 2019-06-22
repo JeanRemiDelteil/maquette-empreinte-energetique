@@ -2,16 +2,17 @@
 	"name": "bilan-energie",
 	"version": "0.0.1",
 	"scripts": {
-		"start": "http-server ./src/",
-		"buildDEV": "rollup -c build/rollup.config.js --environment target:dev"
+		"watch": "rollup --watch -c build/rollup.config.js --environment target:dev,serve",
+		"build:DEV": "rollup -c build/rollup.config.js --environment target:dev"
 	},
 	"dependencies": {
 		"@open-wc/polyfills-loader": "^0.3.2",
 		"lit-element": "^2.2.0"
 	},
 	"devDependencies": {
+		"@open-wc/building-rollup": "^0.5.7",
+		"rimraf": "^2.6.3",
 		"rollup-plugin-commonjs": "^10.0.0",
-		"rollup-plugin-delete": "^1.0.0",
 		"rollup-plugin-node-resolve": "^5.0.3"
 	}
 }

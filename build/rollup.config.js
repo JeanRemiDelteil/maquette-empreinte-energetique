@@ -1,46 +1,37 @@
-import resolve from 'rollup-plugin-node-resolve';
+import createDefaultConfig from '@open-wc/building-rollup/modern-and-legacy-config';
 import commonjs from 'rollup-plugin-commonjs';
-import del from 'rollup-plugin-delete';
+import rimraf from 'rimraf';
+import runCmd from './plugin/rollup-plugin-run-command';
 
 
-/**
- * @return {Promise<BuildConfig>}
- */
-async function getConfig() {
+async function getRollUpConfig() {
+	const serve = process.env['serve'] || false;
 	const target = process.env['target'] || 'dev';
+	const config = await import(`./config/${target}_config.js`);
 	
-	return await import(`./config/${target}_config.js`);
-}
-
-
-/**
- * @param {BuildConfig} config
- */
-function getPrepBuild(config) {
-	return {
-		plugins: [
-			del({
-				targets: `./${config.outputFolder}/`,
-			}),
-		],
-	};
-}
-
-
-/**
- * @param {BuildConfig} config
- */
-async function getRollUpConfig(config) {
-	return {
-		input: 'src/main/_entry_main.js',
-		output: {
-			dir: `./${config.outputFolder}/`,
-			format: 'esm',
-		},
+	const rollUpConfigs = createDefaultConfig({
+		input: './src/index.html',
+		outputDir: `./${config.outputFolder}`,
+	});
+	
+	// Pre build Clean up of the output folder
+	await new Promise(res => rimraf(`./${config.outputFolder}/**`, res));
+	
+	
+	return rollUpConfigs.map(rollUpConfig => ({
+		...rollUpConfig,
 		
 		plugins: [
-			resolve(),
+			...rollUpConfig.plugins,
+			
 			commonjs(),
+			
+			...serve ? [
+				runCmd({
+					cmd: `http-server ./build/src/dev/`,
+					runOnce: true,
+				}),
+			] : [],
 		],
 		
 		'onwarn'(warning, rollupWarn) {
@@ -49,13 +40,9 @@ async function getRollUpConfig(config) {
 			
 			rollupWarn(warning);
 		},
-	};
+	}));
 }
 
 
 // noinspection JSUnusedGlobalSymbols
-export default getConfig()
-	.then(config => Promise.all([
-		getPrepBuild(config),
-		//getRollUpConfig(config),
-	]));
+export default getRollUpConfig();
