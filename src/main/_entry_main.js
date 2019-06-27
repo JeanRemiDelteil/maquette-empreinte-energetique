@@ -1,1 +1,5 @@
-import './containers/app-main';
+import './boot-config';
+import {AppMain} from './containers/app-main';
+
+
+customElements.define(AppMain.is, AppMain);

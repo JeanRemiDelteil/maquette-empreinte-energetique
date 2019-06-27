@@ -7,12 +7,16 @@
 		"serve:dev-build": "http-server ./build/src/dev"
 	},
 	"dependencies": {
-		"lit-element": "^2.2.0"
+		"lit-element": "^2.2.0",
+		"pwa-helpers": "^0.9.1",
+		"redux": "^4.0.1"
 	},
 	"devDependencies": {
 		"@open-wc/building-rollup": "^0.5.7",
 		"rimraf": "^2.6.3",
+		"rollup": "^1.16.2",
 		"rollup-plugin-commonjs": "^10.0.0",
+		"rollup-plugin-json": "^4.0.0",
 		"rollup-plugin-terser": "^5.0.0"
 	}
 }

@@ -3,6 +3,10 @@ import commonjs from 'rollup-plugin-commonjs';
 import rimraf from 'rimraf';
 import runCmd from './plugin/rollup-plugin-run-command';
 import {terser} from 'rollup-plugin-terser';
+import jsonPlugin from 'rollup-plugin-json';
+import virtualModule from './plugin/rollup-plugin-virtual-processed';
+
+import configFromSource from '../src/main/config.json';
 
 
 async function getRollUpConfig() {
@@ -10,7 +14,14 @@ async function getRollUpConfig() {
 	const target = process.env['target'] || 'dev';
 	const production = !process.env['ROLLUP_WATCH'];
 	
+	/**
+	 * @type {BuildConfig}
+	 */
 	const config = await import(`./config/${target}_config.js`);
+	const srcConfig = {
+		...configFromSource,
+		...config.config,
+	};
 	
 	
 	const rollUpConfigs = createDefaultConfig({
@@ -25,10 +36,23 @@ async function getRollUpConfig() {
 	return rollUpConfigs.map(rollUpConfig => ({
 		...rollUpConfig,
 		
-		plugins: [
+		'plugins': [
+			// Import config from build config
+			virtualModule({
+				'src/main/config.json': JSON.stringify(srcConfig),
+			}),
+			
 			...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
 			
+			// Resolve commonJS modules
 			commonjs(),
+			
+			jsonPlugin({
+				exclude: ['node_modules/**'],
+				preferConst: true,
+			}),
+			
+			// Minification
 			production && terser({
 				mangle: {
 					properties: {
