@@ -35,7 +35,7 @@ export class Router {
 		Object.keys(module)
 			.forEach(key => {
 				const elemClass = module[key];
-				if (!elemClass.is || !/^\w+-\w+$/.test(elemClass.is)) return;
+				if (!elemClass.is || !/^\w+(-\w+)+$/.test(elemClass.is)) return;
 				
 				customElements.define(module[key].is, module[key]);
 			});

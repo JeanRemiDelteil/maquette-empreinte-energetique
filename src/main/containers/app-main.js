@@ -27,10 +27,11 @@ export class AppMain extends connect(LitElement) {
 		// Init routes
 		this._router = new Router([
 			{
-				name: 'test',
-				pattern: /\/test/,
+				name: 'EnergyBalance',
+				pattern: /\/bilan/,
 				
-				load: () => 'This is a test !',
+				load: () => html`<app-energy-balance></app-energy-balance>`,
+				importLazy: () => import('../containers/app-energy-balance'),
 			},
 			{
 				name: 'home',
@@ -67,8 +68,7 @@ export class AppMain extends connect(LitElement) {
 </style>
 
 <main>
-	<a href="/test">/test</a>
-	<a href="/nothing">/nothing</a>
+	<a href="/bilan">/bilan</a>
 	<a href="/">/</a>
 	
 	${this.route || ''}

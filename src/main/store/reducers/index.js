@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {router} from './router';
+import {energyBalance} from './energyBalance';
 
 
 /**
@@ -8,4 +9,5 @@ import {router} from './router';
 export const reducers = combineReducers({
 	version: () => 0,
 	router,
+	energyBalance,
 });
