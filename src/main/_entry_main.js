@@ -1,4 +1,3 @@
-import './boot-config';
 import {AppMain} from './containers/app-main';
 
 

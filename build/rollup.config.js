@@ -69,7 +69,6 @@ async function getRollUpConfig() {
 						},
 					],
 					copyOnce: true,
-					verbose: true,
 				}),
 				
 				// Minification
