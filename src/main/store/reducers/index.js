@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import {router} from './router';
 
 
 /**
@@ -6,4 +7,5 @@ import {combineReducers} from 'redux';
  */
 export const reducers = combineReducers({
 	version: () => 0,
+	router,
 });
