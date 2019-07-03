@@ -6,4 +6,9 @@ declare namespace Data {
 		value: number
 	}
 	
+	interface Category {
+		items: Map<string, number>
+		value: number
+	}
+	
 }

@@ -1,45 +1,68 @@
+import {actionsWeights} from './actionsWeights';
+
+
 /**
  * @param {Data.Action[]} rawActions
- *
- * @return {[]}
  */
 export function dataConverter(rawActions) {
 	
 	/**
-	 * @type {Map<string, []>}
+	 * @type {Map<string, Data.Category>}
 	 */
 	const categories = new Map();
 	
 	// Aggregate by category
 	rawActions.forEach(action => {
-		!categories.has(action.category) && categories.set(action.category, []);
+		!categories.has(action.category) && categories.set(action.category, {
+			items: new Map(),
+			value: 0,
+		});
 		
-		categories
-			.get(action.category)
-			.push({
-				type: action.type,
-				value: action.value,
-			});
+		const category = categories.get(action.category);
+		!category.items.has(action.type) && category.items.set(action.type, 0);
+		
+		const actionWeight = getActionWeight(action);
+		
+		category.items.set(action.type, category.items.get(action.type) + actionWeight);
+		category.value += actionWeight;
 	});
 	
 	// Build the output
 	const output = [];
-	categories.forEach((types, key) => {
+	const drilldown = [];
+	
+	categories.forEach((category, key) => {
 		output.push({
 			name: key,
-			y: types.reduce((acc, value) => acc + getActionWeight({
-				category: key,
-				...value,
-			}), 0),
+			drilldown: key,
+			y: category.value,
+		});
+		
+		drilldown.push({
+			name: key,
+			id: key,
+			data: (items => {
+				const arr = [];
+				
+				items.forEach((value, key) => {
+					arr.push({
+						name: key,
+						y: value,
+					});
+				});
+				
+				return arr;
+			})(category.items),
 		});
 	});
 	
-	console.log(output);
-	
-	return output;
+	return {
+		main: output,
+		drilldown: {series: drilldown},
+	};
 }
 
 
 function getActionWeight({category, type, value}) {
-	return value;
+	return ((actionsWeights[category] || {})[type] || (val => val || 0))(value);
 }

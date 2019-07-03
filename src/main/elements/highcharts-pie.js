@@ -1,25 +1,26 @@
 import {html, LitElement} from 'lit-element';
-import Highcharts from 'highcharts/es-modules/parts/Globals.js';
-import 'highcharts/es-modules/parts/SvgRenderer.js';
-import 'highcharts/es-modules/parts/Html.js';
-import 'highcharts/es-modules/parts/Axis.js';
-import 'highcharts/es-modules/parts/DateTimeAxis.js';
-import 'highcharts/es-modules/parts/LogarithmicAxis.js';
-import 'highcharts/es-modules/parts/PlotLineOrBand.js';
-import 'highcharts/es-modules/parts/Tooltip.js';
-import 'highcharts/es-modules/parts/Pointer.js';
-import 'highcharts/es-modules/parts/TouchPointer.js';
-import 'highcharts/es-modules/parts/MSPointer.js';
-import 'highcharts/es-modules/parts/Legend.js';
-import 'highcharts/es-modules/parts/Chart.js';
-import 'highcharts/es-modules/parts/ScrollablePlotArea.js';
-import 'highcharts/es-modules/parts/Stacking.js';
-import 'highcharts/es-modules/parts/Dynamics.js';
-import 'highcharts/es-modules/parts/PieSeries.js';
-import 'highcharts/es-modules/parts/DataLabels.js';
-import 'highcharts/es-modules/modules/overlapping-datalabels.src.js';
-import 'highcharts/es-modules/parts/Interaction.js';
-import 'highcharts/es-modules/parts/Responsive.js';
+import Highcharts from 'highcharts/es-modules/parts/Globals';
+import 'highcharts/es-modules/parts/SvgRenderer';
+import 'highcharts/es-modules/parts/Html';
+import 'highcharts/es-modules/parts/Axis';
+import 'highcharts/es-modules/parts/DateTimeAxis';
+import 'highcharts/es-modules/parts/LogarithmicAxis';
+import 'highcharts/es-modules/parts/PlotLineOrBand';
+import 'highcharts/es-modules/parts/Tooltip';
+import 'highcharts/es-modules/parts/Pointer';
+import 'highcharts/es-modules/parts/TouchPointer';
+import 'highcharts/es-modules/parts/MSPointer';
+import 'highcharts/es-modules/parts/Legend';
+import 'highcharts/es-modules/parts/Chart';
+import 'highcharts/es-modules/parts/ScrollablePlotArea';
+import 'highcharts/es-modules/parts/Stacking';
+import 'highcharts/es-modules/parts/Dynamics';
+import 'highcharts/es-modules/parts/PieSeries';
+import 'highcharts/es-modules/parts/DataLabels';
+import 'highcharts/es-modules/modules/overlapping-datalabels.src';
+import 'highcharts/es-modules/parts/Interaction';
+import 'highcharts/es-modules/parts/Responsive';
+import 'highcharts/es-modules/modules/drilldown.src';
 
 
 export class HighchartsPie extends LitElement {

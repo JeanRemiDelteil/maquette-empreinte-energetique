@@ -51,7 +51,6 @@ export class AppEnergyBalance extends connect(PageEnergyBalance) {
 		this.store.dispatch(addAction({
 			category: 'HouseChore',
 			type: 'Wash dishes',
-			value: 1,
 		}));
 		
 	}
@@ -62,7 +61,6 @@ export class AppEnergyBalance extends connect(PageEnergyBalance) {
 		this.store.dispatch(addAction({
 			category: 'HouseChore',
 			type: 'Toaster',
-			value: 1,
 		}));
 		
 	}

@@ -120,7 +120,11 @@ export class PageEnergyBalance extends LitElement {
 	_onPropChanged_actions() {
 		if (!this.pieChart || !this.pieChart.chart) return;
 		
-		this.pieChart.chart.series[0].setData(dataConverter(this.actions));
+		const {main, drilldown} = dataConverter(this.actions);
+		
+		this.pieChart.chart.drillUp();
+		this.pieChart.chart.series[0].setData(main);
+		this.pieChart.chart.drilldown.update(drilldown);
 	}
 	
 	
