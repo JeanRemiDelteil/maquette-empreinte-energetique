@@ -6,5 +6,5 @@ import {ADD_ACTION} from './types';
  */
 export const addAction = (action) => ({
 	type: ADD_ACTION,
-	payload: action,
+	payload: {...action},
 });

@@ -65,12 +65,13 @@ export class AppMain extends connect(LitElement) {
 		--app-secondary-color: #0081f5;
 		--app-secondary-text-color: white;
 	}
+	
+	main {
+		width: 100%;
+	}
 </style>
 
 <main>
-	<a href="/bilan">/bilan</a>
-	<a href="/">/</a>
-	
 	${this.route || ''}
 </main>
 `;

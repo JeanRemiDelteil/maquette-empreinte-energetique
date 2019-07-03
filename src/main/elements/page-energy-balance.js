@@ -1,4 +1,6 @@
 import {html, LitElement} from 'lit-element';
+import './highcharts-pie';
+import {dataConverter} from '../lib/dataConverter';
 
 
 export class PageEnergyBalance extends LitElement {
@@ -19,6 +21,7 @@ export class PageEnergyBalance extends LitElement {
 		super();
 		
 		this.actions = [];
+		this.pieChart = null;
 	}
 	
 	
@@ -27,13 +30,28 @@ export class PageEnergyBalance extends LitElement {
 	render() {
 		return html`
 <style>
-	:host {}
+	:host {
+		display: block;
+	}
 </style>
 
 <div>
 	Energy balance
 	
-	<button @click="${this._onAddAction}">Add an action</button>
+	<button @click="${this._onTakeTrain}">Take the train</button>
+	<button @click="${this._onTakePlane}">Take the plane</button>
+	<button @click="${this._onWashDishes}">Wash dishes</button>
+	<button @click="${this._onToaster}">Grill some toasts</button>
+	<button @click="${this._onLight}">Light the bulb</button>
+	
+	<div>
+		<highcharts-pie
+			id="pieChart"
+			title="Actions"
+			
+			@pie-ready="${this._onPieLoad}"
+		></highcharts-pie>
+	</div>
 	
 	<div>Actions</div>
 	<div>
@@ -47,15 +65,63 @@ export class PageEnergyBalance extends LitElement {
 	_render_actionList(actions) {
 		if (!actions) return html``;
 		
-		return actions.map(action => html`<div>${action}</div>`);
+		return actions.map(action => html`<div>${JSON.stringify(action)}</div>`);
+	}
+	
+	//</editor-fold>
+	
+	//<editor-fold desc="# LitElement lifecycle">
+	
+	firstUpdated(_changedProperties) {
+		this.pieChart = this.shadowRoot.querySelector('#pieChart');
+	}
+	
+	updated(changedProperties) {
+		
+		changedProperties.forEach((oldValue, propName) => {
+			// noinspection JSRedundantSwitchStatement
+			switch (propName) {
+				case 'actions':
+					this._onPropChanged_actions();
+			}
+		});
+		
 	}
 	
 	//</editor-fold>
 	
 	//<editor-fold desc="# Listeners">
 	
-	_onAddAction() {}
+	_onTakeTrain() {}
+	
+	_onTakePlane() {}
+	
+	_onWashDishes() {}
+	
+	_onToaster() {}
+	
+	_onLight() {}
+	
+	
+	_onPieLoad() {
+		// noinspection JSUnresolvedFunction
+		this.pieChart.chart.addSeries({
+			name: 'Actions',
+			colorByPoint: true,
+			data: [],
+		});
+		
+		this.pieChart.chart.redraw();
+	}
 	
 	//</editor-fold>
+	
+	
+	_onPropChanged_actions() {
+		if (!this.pieChart || !this.pieChart.chart) return;
+		
+		this.pieChart.chart.series[0].setData(dataConverter(this.actions));
+	}
+	
 	
 }

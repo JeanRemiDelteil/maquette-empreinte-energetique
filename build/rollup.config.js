@@ -6,6 +6,7 @@ import {terser} from 'rollup-plugin-terser';
 import jsonPlugin from 'rollup-plugin-json';
 import virtualModule from './plugin/rollup-plugin-virtual-processed';
 import copy from 'rollup-plugin-copy';
+import visualizer from 'rollup-plugin-visualizer';
 
 import configFromSource from '../src/main/config.json';
 
@@ -78,6 +79,9 @@ async function getRollUpConfig() {
 							regex: /^_/,
 						},
 					},
+				}),
+				modernBuild && visualizer({
+					template: 'treemap',
 				}),
 				
 				serve && runCmd({
