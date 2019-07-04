@@ -5,7 +5,8 @@
 		"watch": "rollup -c build/rollup.config.js --environment target:dev,serve --watch",
 		"build:dev": "rollup -c build/rollup.config.js --environment target:dev",
 		"serve:dev": "cd ./build/src/dev && superstatic --port 5000 --host localhost",
-		"deploy:dev": "cd ./build/src/dev && firebase deploy"
+		"build:devWeb": "rollup -c build/rollup.config.js --environment target:devWeb",
+		"deploy:devWeb": "cd ./build/src/dev && firebase deploy"
 	},
 	"dependencies": {
 		"highcharts": "^7.1.2",
