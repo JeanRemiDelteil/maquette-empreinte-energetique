@@ -82,6 +82,7 @@ async function getRollUpConfig() {
 				}),
 				modernBuild && visualizer({
 					template: 'treemap',
+					bundlesRelative: true,
 				}),
 				
 				serve && runCmd({

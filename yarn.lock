@@ -2794,10 +2794,10 @@ rollup-plugin-terser@^5.0.0:
     serialize-javascript "^1.7.0"
     terser "^4.0.0"
 
-rollup-plugin-visualizer@^2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-2.4.3.tgz#0c31e202c5e28129db4a2cba0fca92e4abbe4381"
-  integrity sha512-vlubz1TVnraK7Vjax/jwoVCpGZxba8liWp0ll3ySp6LsJ1zFXXo8gNrG9ySmtCq2jDF0FPotpiZBm7DSVbQhmg==
+rollup-plugin-visualizer@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-2.5.0.tgz#cc475deaebbe6cd9f242473739d283a4e5076bfb"
+  integrity sha512-JUnhhL+LidPluCp5mq5PV9vfVCATe9mT+LOO4MH1hX/lf96LOXTdGStDJ7xtsflyOkHMNRpyHZ+C7UZYTbsoIA==
   dependencies:
     mkdirp "^0.5.1"
     open "^6.3.0"
