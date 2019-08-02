@@ -9,6 +9,8 @@
 		"deploy:devWeb": "cd ./build/src/dev && firebase deploy"
 	},
 	"dependencies": {
+		"@polymer/paper-button": "^3.0.1",
+		"@polymer/paper-card": "^3.0.1",
 		"highcharts": "^7.1.2",
 		"lit-element": "^2.2.0",
 		"pwa-helpers": "^0.9.1",

@@ -3,10 +3,10 @@ import './highcharts-pie';
 import {dataConverter} from '../lib/dataConverter';
 
 
-export class PageEnergyBalance extends LitElement {
+export class PageEReport extends LitElement {
 	
 	static get is() {
-		return 'page-energy-balance';
+		return 'page-e-report';
 	}
 	
 	// noinspection JSUnusedGlobalSymbols

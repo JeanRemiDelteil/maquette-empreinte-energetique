@@ -1,81 +1,70 @@
-import {PageEnergyBalance} from '../elements/page-energy-balance';
-import {addAction} from '../store/reducers/energyBalance/actions';
 import {connect} from '../store/store';
-import {getActions} from '../store/reducers/energyBalance/selectors';
+import {getLocationPath} from '../store/reducers/router/selectors';
+import {Router} from '../lib/router/Router';
+import {html, LitElement} from 'lit-element';
 
 
-// noinspection JSUnusedGlobalSymbols
-export class AppEnergyBalance extends connect(PageEnergyBalance) {
+// Define Router only once (not on every element creation)
+const router = new Router([
+	{
+		name: 'Create',
+		pattern: /^\/empreinte-energie(\/.*)?$/,
+		
+		load: () => html`<page-new-balance></page-new-balance>`,
+		importLazy: () => import('../elements/page-new-balance'),
+	},
+]);
+
+
+export class AppEnergyBalance extends connect(LitElement) {
 	
 	static get is() {
 		return 'app-energy-balance';
 	}
 	
+	static get properties() {
+		return {
+			route: {
+				type: Object,
+			},
+		};
+	}
+	
+	
+	constructor() {
+		super();
+		
+		this._router = router;
+	}
+	
+	
 	//<editor-fold desc="# Redux callback">
 	
 	// noinspection JSUnusedGlobalSymbols
 	stateChanged(state) {
-		this.actions = getActions(state);
+		this.route = this._router.process(getLocationPath(state));
 	}
 	
 	//</editor-fold>
 	
-	
-	//<editor-fold desc="# Listeners">
-	
-	// noinspection JSUnusedGlobalSymbols
-	_onTakeTrain() {
-		
-		this.store.dispatch(addAction({
-			category: 'Transport',
-			type: 'Train',
-			value: 1000,
-		}));
-		
+	render() {
+		return html`
+<style>
+	:host{
+		display: flex;
+		width: 100%;
 	}
 	
-	// noinspection JSUnusedGlobalSymbols
-	_onTakePlane() {
-		
-		this.store.dispatch(addAction({
-			category: 'Transport',
-			type: 'Plane',
-			value: 2000,
-		}));
+	main {
+		display: flex;
+		width: 100%;
+	}
+</style>
+
+<main>
+	${this.route || ''}
+</main>
+`;
 		
 	}
-	
-	// noinspection JSUnusedGlobalSymbols
-	_onWashDishes() {
-		
-		this.store.dispatch(addAction({
-			category: 'HouseChore',
-			type: 'Wash dishes',
-		}));
-		
-	}
-	
-	// noinspection JSUnusedGlobalSymbols
-	_onToaster() {
-		
-		this.store.dispatch(addAction({
-			category: 'HouseChore',
-			type: 'Toaster',
-		}));
-		
-	}
-	
-	// noinspection JSUnusedGlobalSymbols
-	_onLight() {
-		
-		this.store.dispatch(addAction({
-			category: 'HouseChore',
-			type: 'Light',
-			value: 40,
-		}));
-		
-	}
-	
-	//</editor-fold>
-	
 }

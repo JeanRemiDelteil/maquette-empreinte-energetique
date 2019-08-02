@@ -60,9 +60,9 @@ export class Router {
 			// Do lazy imports
 			route.importLazy && route.importLazy()
 				.then((module) => {
-					Router._autoDefineLitElementClass(module);
-					
 					delete route.importLazy;
+					
+					Router._autoDefineLitElementClass(module);
 				});
 			
 			this._currentRouteOutput = route.load();
