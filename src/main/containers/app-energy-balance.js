@@ -7,11 +7,18 @@ import {html, LitElement} from 'lit-element';
 // Define Router only once (not on every element creation)
 const router = new Router([
 	{
-		name: 'Create',
-		pattern: /^\/empreinte-energie(\/.*)?$/,
+		name: 'Edit',
+		pattern: /^\/empreinte-energie\/([^/]+)\/modifier$/,
 		
-		load: () => html`<page-new-balance></page-new-balance>`,
-		importLazy: () => import('../elements/page-new-balance'),
+		load: () => html`<app-edit-balance></app-edit-balance>`,
+		importLazy: () => import('../containers/app-edit-balance'),
+	},
+	{
+		name: 'Create',
+		pattern: /^\/empreinte-energie(?:\/.*)?$/,
+		
+		load: () => html`<app-new-balance></app-new-balance>`,
+		importLazy: () => import('../containers/app-new-balance'),
 	},
 ]);
 

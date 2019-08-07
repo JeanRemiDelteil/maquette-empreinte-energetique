@@ -1,6 +1,7 @@
 import {applyMiddleware, compose, createStore} from 'redux';
 import {connect as connectMixin} from 'pwa-helpers/connect-mixin';
 import {reducers} from './reducers';
+import {eBalanceMiddlewares} from './reducers/energyBalance/middleware';
 
 
 /**
@@ -15,7 +16,9 @@ let enhancers = [];
  *
  * @type {Middleware[]}
  */
-const middlewares = [];
+const middlewares = [
+	...eBalanceMiddlewares,
+];
 
 
 // Only active for dev

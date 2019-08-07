@@ -58,7 +58,5 @@ export class PageNewBalance extends LitElement {
 	}
 	
 	
-	_onStart() {
-		console.log('Start an energy balance');
-	}
+	_onStart() {}
 }
