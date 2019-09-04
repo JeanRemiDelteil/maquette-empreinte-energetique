@@ -5,7 +5,7 @@ import {driver} from './firebaseDatabaseDriver';
 /**
  * @type {firebase.app.App}
  */
-export const app = firebase.initializeApp(firebaseConfig, 'main');
+export const app = firebase.initializeApp(firebaseConfig);
 
 export const ref = app.database().ref();
 

@@ -1,4 +1,4 @@
-import {EB_ADD_ACTION, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
+import {EB_ADD_ACTION, EB_BALANCE_INPUT_ADD, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
 import {combineReducers} from 'redux';
 
 
@@ -33,6 +33,21 @@ function balance(state = {}, action) {
 			return {
 				id: action.payload.id,
 				error: action.payload.error,
+			};
+		
+		case EB_BALANCE_INPUT_ADD:
+			const data = state.data || {};
+			const input = action.payload.input || '';
+			
+			return {
+				...state,
+				data: {
+					...data,
+					inputs: [
+						...(data.inputs || []),
+						...([input] || []),
+					],
+				},
 			};
 	}
 	

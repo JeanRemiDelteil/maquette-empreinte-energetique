@@ -10,6 +10,19 @@
 	<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js" defer></script>
 	<script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-database.js" defer></script>
 	
+	<script>
+		function loadScript(src) {
+			// noinspection ES6ConvertVarToLetConst
+			var domScript = document.createElement('script');
+			
+			domScript.src = src;
+			document.head.appendChild(domScript);
+		}
+		
+		// Polyfill needed for neon-animation (mainly dropdown menu)
+		!(window['KeyframeEffect'] && document['timeline']) && loadScript('https://unpkg.com/web-animations-js@2.3.2/web-animations-next-lite.min.js');
+	</script>
+	
 	<script type="module" src="/main/_entry_config.js"></script>
 	<script type="module" src="/main/_entry_main.js"></script>
 
