@@ -2,6 +2,7 @@ import {connect} from '../store/store';
 import {PageEditBalance} from '../elements/page-edit-balance';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
 import {balance_addInput} from '../store/reducers/energyBalance/actions';
+import {baseDataLoad} from '../store/reducers/baseData/actions';
 
 
 export class AppEditBalance extends connect(PageEditBalance) {
@@ -19,6 +20,9 @@ export class AppEditBalance extends connect(PageEditBalance) {
 			'Lave-vaisselle',
 			'Ampoule',
 		];
+		
+		// Init base data
+		this.store.dispatch(baseDataLoad());
 	}
 	
 	

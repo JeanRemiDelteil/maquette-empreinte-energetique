@@ -2,6 +2,7 @@ import {applyMiddleware, compose, createStore} from 'redux';
 import {connect as connectMixin} from 'pwa-helpers/connect-mixin';
 import {reducers} from './reducers';
 import {eBalanceMiddlewares} from './reducers/energyBalance/middleware';
+import {baseDataMiddlewares} from './reducers/baseData/middleware';
 
 
 /**
@@ -18,6 +19,7 @@ let enhancers = [];
  */
 const middlewares = [
 	...eBalanceMiddlewares,
+	...baseDataMiddlewares,
 ];
 
 
