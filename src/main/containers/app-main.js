@@ -6,6 +6,31 @@ import {getLocationPath} from '../store/reducers/router/selectors';
 import {Router} from '../lib/router/Router';
 
 
+const router = new Router([
+	{
+		name: 'EnergyBalance',
+		pattern: /^\/empreinte-energie(\/.*)?$/,
+		
+		load: () => html`<app-energy-balance></app-energy-balance>`,
+		importLazy: () => import('../containers/app-energy-balance'),
+	},
+	{
+		name: 'Home',
+		pattern: /^\/$/,
+		
+		load: () => html`<page-home></page-home>`,
+		importLazy: () => import('../elements/page-home'),
+	},
+	{
+		name: '404',
+		pattern: /./,
+		
+		load: () => html`<page-404></page-404>`,
+		importLazy: () => import('../elements/page-404'),
+	},
+]);
+
+
 export class AppMain extends connect(LitElement) {
 	
 	static get is() {
@@ -25,22 +50,7 @@ export class AppMain extends connect(LitElement) {
 		super();
 		
 		// Init routes
-		this._router = new Router([
-			{
-				name: 'EnergyBalance',
-				pattern: /\/bilan/,
-				
-				load: () => html`<app-energy-balance></app-energy-balance>`,
-				importLazy: () => import('../containers/app-energy-balance'),
-			},
-			{
-				name: 'home',
-				pattern: /./,
-				
-				load: () => html`<page-home></page-home>`,
-				importLazy: () => import('../elements/page-home'),
-			},
-		]);
+		this._router = router;
 		
 		installRouter((location) => this.store.dispatch(navigateTo(location)));
 	}
@@ -50,6 +60,7 @@ export class AppMain extends connect(LitElement) {
 	
 	// noinspection JSUnusedGlobalSymbols
 	render() {
+		// noinspection CssUnresolvedCustomProperty
 		return html`
 <style>
 	:host {
@@ -64,14 +75,19 @@ export class AppMain extends connect(LitElement) {
 		--app-primary-text-color: white;
 		--app-secondary-color: #0081f5;
 		--app-secondary-text-color: white;
+		--app-background-color: #c7c7c7;
+		
+		background-color: var(--app-background-color);
 	}
 	
 	main {
+		display: flex;
 		width: 100%;
 	}
 </style>
 
 <main>
+	<!-- Display current Route -->
 	${this.route || ''}
 </main>
 `;

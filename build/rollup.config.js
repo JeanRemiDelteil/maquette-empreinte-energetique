@@ -24,6 +24,7 @@ async function getRollUpConfig() {
 		...configFromSource,
 		...config.config,
 	};
+	const generateSourceMap = config.sourceMap === undefined ? true : config.sourceMap;
 	
 	
 	const rollUpConfigs = createDefaultConfig({
@@ -41,6 +42,11 @@ async function getRollUpConfig() {
 		
 		return {
 			...rollUpConfig,
+			
+			output: {
+				...rollUpConfig.output,
+				sourcemap: generateSourceMap,
+			},
 			
 			'plugins': [
 				// Import config from build config
@@ -74,11 +80,7 @@ async function getRollUpConfig() {
 				
 				// Minification
 				production && terser({
-					mangle: {
-						properties: {
-							regex: /^_/,
-						},
-					},
+					sourcemap: generateSourceMap,
 				}),
 				modernBuild && visualizer({
 					template: 'treemap',

@@ -21,7 +21,11 @@ export class PageHome extends LitElement {
 </style>
 
 <div>
-	This is HOME
+	<h1>HOME</h1>
+	
+	<div>
+		<a href="/empreinte-energie">Nouvelle empreinte énergétique</a>
+	</div>
 </div>`;
 	}
 	

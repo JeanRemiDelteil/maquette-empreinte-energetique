@@ -1,3 +1,10 @@
 {
-	"env": "development"
+	"env": "development",
+	"firebaseConfig": {
+		"apiKey": "AIzaSyA63x1bFiHDqTECxE30iCH4qyrhiZxBY5U",
+		"authDomain": "bilan-energie-dev.firebaseapp.com",
+		"databaseURL": "https://bilan-energie-dev.firebaseio.com",
+		"projectId": "bilan-energie-dev",
+		"appId": "1:828561284868:web:a98aba8e0e341344"
+	}
 }

@@ -6,9 +6,17 @@
 		"build:dev": "rollup -c build/rollup.config.js --environment target:dev",
 		"serve:dev": "cd ./build/src/dev && superstatic --port 5000 --host localhost",
 		"build:devWeb": "rollup -c build/rollup.config.js --environment target:devWeb",
-		"deploy:devWeb": "cd ./build/src/dev && firebase deploy"
+		"deploy:devWeb": "cd ./build/src/dev && firebase deploy",
+		"build:prod": "rollup -c build/rollup.config.js --environment target:prod",
+		"deploy:prod": "cd ./build/src/prod && firebase deploy"
 	},
 	"dependencies": {
+		"@polymer/paper-button": "^3.0.1",
+		"@polymer/paper-card": "^3.0.1",
+		"@polymer/paper-dropdown-menu": "^3.0.1",
+		"@polymer/paper-item": "^3.0.1",
+		"@polymer/paper-listbox": "^3.0.1",
+		"firebase": "^6.3.4",
 		"highcharts": "^7.1.2",
 		"lit-element": "^2.2.0",
 		"pwa-helpers": "^0.9.1",
