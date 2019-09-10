@@ -4,7 +4,6 @@ import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-item';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
-import {LG_INPUT_ADD, LG_INPUT_TYPE} from '../lang/lang-fr';
 
 
 export class PageEditBalance extends LitElement {
@@ -16,7 +15,8 @@ export class PageEditBalance extends LitElement {
 	static get properties() {
 		return {
 			id: {type: String},
-			inputs: {type: Array},
+			baseData: {type: Object},
+			inputData: {type: Object},
 			inputsList: {type: Array},
 		};
 	}
@@ -26,7 +26,8 @@ export class PageEditBalance extends LitElement {
 		super();
 		
 		this.id = '';
-		this.inputs = [];
+		this.baseData = {};
+		this.inputData = {};
 		this.inputsList = [];
 		
 		this._dropDownMenu_inputType = null;
@@ -36,65 +37,64 @@ export class PageEditBalance extends LitElement {
 		return html`
 <style>
 	:host {
-		display: flex;
 		width: 100%;
 		
-		align-items: start;
-		justify-content: center;
+		position: relative;
 		
-		padding: 2em 0;
+		padding: 2em;
 	}
 	
 	main {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
+		
+		width: 100%;
+		height: 100%;
 	}
 	
-	.card {
-		padding: 2em;
-	}
-	.card:not(:last-child) {
-		margin-bottom: 2em;
-	}
-	
-	.card-input {
-		display: flex;
-		align-items: baseline;
+	.child {
+		width: 50%;
 	}
 	
 	paper-item {
 		user-select: none;
 		cursor: pointer;
 	}
+	
+	
+	@media screen and (max-width: 999px) {
+		main {
+			flex-direction: column;
+		}
+		
+		.child {
+			width: 100%;
+		}
+	}
+	
 </style>
 
 <main>
-	<paper-card class="card">Rapport ID:${this.id}</paper-card>
 	
-	<paper-card class="card card-input">
-		<paper-dropdown-menu-light label="${LG_INPUT_TYPE}" @value-changed="${this._on_inputSelector_valueChanged}">
-			<paper-listbox slot="dropdown-content">
-				${this._render_inputList(this.inputs)}
-			</paper-listbox>
-		</paper-dropdown-menu-light>
-		
-		<paper-button @click="${() => this._on_AddInput(this._dropDownMenu_inputType)}">${LG_INPUT_ADD}</paper-button>
-	</paper-card>
+	<div class="child consumption-input">
+		${''}
+	</div>
 	
-	<paper-card class="card">
+	<div class="child consumption-list">
 		${this._render_balanceInputList(this.inputsList)}
-	</paper-card>
+	</div>
+	
 </main>
 `;
 	}
 	
 	/**
-	 * @param {Array} list
+	 * @param {IBaseData} baseData
 	 * @return {TemplateResult|TemplateResult[]}
 	 * @private
 	 */
-	_render_inputList(list) {
-		return list.map(item => html`<paper-item>${item}</paper-item>`);
+	_render_input(baseData) {
+		return html``;
 	}
 	
 	/**

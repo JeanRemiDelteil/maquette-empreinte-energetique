@@ -3,6 +3,7 @@ import {PageEditBalance} from '../elements/page-edit-balance';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
 import {balance_addInput} from '../store/reducers/energyBalance/actions';
 import {baseDataLoad} from '../store/reducers/baseData/actions';
+import {selectBaseData} from '../store/reducers/baseData/selectors';
 
 
 export class AppEditBalance extends connect(PageEditBalance) {
@@ -14,12 +15,7 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	constructor() {
 		super();
 		
-		this.inputs = [
-			'Train',
-			'Avion',
-			'Lave-vaisselle',
-			'Ampoule',
-		];
+		this.inputData = {};
 		
 		// Init base data
 		this.store.dispatch(baseDataLoad());
@@ -32,6 +28,8 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	stateChanged(state) {
 		this.balance = getBalance(state);
 		this.id = getBalanceId(this.balance);
+		
+		this.baseData = selectBaseData(state);
 		
 		this.inputsList = getBalanceInputs(this.balance);
 	}

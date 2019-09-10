@@ -33,21 +33,50 @@ function processValues(values) {
 		});
 }
 
+export const CATEGORY = 'CATEGORY';
+export const COEFS = 'COEFS';
+
+/**
+ * @param {{}} input
+ * @param {string} itemLabel
+ * @param {string} itemType
+ * @return {{}|*}
+ * @private
+ */
+function _addItemInCategory(input, itemLabel, itemType) {
+	let out;
+	
+	if (!input.values[itemLabel]) {
+		out = input.values[itemLabel] = {};
+	}
+	else {
+		return input.values[itemLabel];
+	}
+	
+	out.type = itemType;
+	out.label = itemLabel;
+	itemType === CATEGORY && (out.values = {});
+	
+	return out;
+}
+
 function process(data = []) {
 	/**
 	 * @type {IBaseData}
 	 */
-	let output = {};
+	let output = {
+		label: 'Activité',
+		type: CATEGORY,
+		values: {},
+	};
 	
 	data.forEach(row => {
 		let [activity, category, subCategory, baseKW, baseCO2, ...coefs] = row;
 		
-		let ref = output;
-		ref = (ref[activity] = ref[activity] || {});
-		ref = (ref[category] = ref[category] || {});
+		let ref = _addItemInCategory(output, activity, CATEGORY);
+		ref = _addItemInCategory(ref, category, CATEGORY);
+		ref = _addItemInCategory(ref, subCategory || '#Default#', COEFS);
 		
-		subCategory = subCategory || '#Default#';
-		ref = (ref[subCategory] = ref[subCategory] || {});
 		
 		ref.baseKW = baseKW;
 		ref.baseCO2 = baseCO2;
@@ -57,6 +86,8 @@ function process(data = []) {
 		while (coefs.length) {
 			let label, values;
 			[label, values, ...coefs] = coefs;
+			
+			if (!label) break;
 			
 			ref.coefs.push({
 				label,
