@@ -15,6 +15,13 @@ const router = new Router([
 		importLazy: () => import('../containers/app-energy-balance'),
 	},
 	{
+		name: 'test-graph',
+		pattern: /^\/test-graph(\/.*)?$/,
+		
+		load: () => html`<app-e-report></app-e-report>`,
+		importLazy: () => import('../containers/app-e-report'),
+	},
+	{
 		name: 'Home',
 		pattern: /^\/$/,
 		

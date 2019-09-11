@@ -26,6 +26,9 @@ export class PageHome extends LitElement {
 	<div>
 		<a href="/empreinte-energie">Nouvelle empreinte énergétique</a>
 	</div>
+	<div>
+		<a href="/test-graph">Test Graph</a>
+	</div>
 </div>`;
 	}
 	
