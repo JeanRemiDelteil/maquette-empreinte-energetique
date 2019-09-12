@@ -15,8 +15,6 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	constructor() {
 		super();
 		
-		this.inputData = {};
-		
 		// Init base data
 		this.store.dispatch(baseDataLoad());
 	}
@@ -37,8 +35,11 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	//</editor-fold>
 	
 	
-	_on_AddInput(input) {
-		this.store.dispatch(balance_addInput(input));
+	/**
+	 * @param {IConsumptionRef} ref
+	 */
+	addSelection(ref) {
+		this.store.dispatch(balance_addInput(ref));
 	}
 	
 }

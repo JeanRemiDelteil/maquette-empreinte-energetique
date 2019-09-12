@@ -1,19 +1,22 @@
-declare interface IBaseData {
-	[activity: string]: IBS_Activity
-}
+declare type IBaseData = IBS_Category;
 
-declare interface IBS_Activity {
-	[activity: string]: IBS_Category
-}
 
 declare interface IBS_Category {
-	[activity: string]: IBS_SubCategory
+	type: 'CATEGORY';
+	label: string;
+	values: IBS_CategoryValues;
 }
 
-declare interface IBS_SubCategory {
-	baseKW: number
-	baseCO2: number
-	coefs: IBS_Coef[]
+declare interface IBS_CategoryValues {
+	[categoryName: string]: IBS_Category | IBS_Coefs;
+}
+
+declare interface IBS_Coefs {
+	type: 'COEFS';
+	label: string;
+	baseKW: number;
+	baseCO2: number;
+	coefs: IBS_Coef[];
 }
 
 declare interface IBS_Coef {
@@ -26,14 +29,24 @@ declare interface IBS_Value {
 	value: number
 }
 
+declare interface IBS_CoefValue {
+	title: string
+	label: string
+	value: number
+}
+
 
 declare interface IConsumptionRef {
-	activity: string
-	category: string
-	subCategory: string
-	coefsValueIndex: number[] // index of the selected values
+	activity: string;
+	category: string;
+	subCategory: string;
+	baseValues: {
+		baseKW: number;
+		baseCO2: number;
+	}
+	coefs: IBS_CoefValue[]; // index of the selected values
 	
-	calculatedValue?: IBSC_calculatedValue
+	calculatedValue?: IBSC_calculatedValue;
 }
 
 declare interface IBSC_calculatedValue {

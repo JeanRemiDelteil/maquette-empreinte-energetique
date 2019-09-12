@@ -111,15 +111,13 @@ export async function getBaseData() {
 
 
 /**
- * @param {IBaseData} baseData
  * @param {IConsumptionRef} ref
  *
  * @return {IConsumptionRef}
  */
-export function calculateConsumption(baseData, ref) {
-	const root = baseData[ref.activity][ref.category][ref.subCategory];
-	const coefMul = root.coefs.reduce((acc, coef, index) => {
-		acc *= coef.values[ref.coefsValueIndex[index]];
+export function calculateConsumption(ref) {
+	const coefMul = ref.coefs.reduce((acc, coef) => {
+		acc *= coef.value;
 		
 		return acc;
 	}, 1);
@@ -127,8 +125,8 @@ export function calculateConsumption(baseData, ref) {
 	return {
 		...ref,
 		calculatedValue: {
-			kW: root.baseKW * coefMul,
-			CO2: root.baseKW * coefMul,
+			kW: ref.baseValues.baseKW * coefMul,
+			CO2: ref.baseValues.baseCO2 * coefMul,
 		},
 	};
 }
