@@ -12,6 +12,7 @@ import configFromSource from '../src/main/config.json';
 
 
 async function getRollUpConfig() {
+	const noLegacyBuild = process.env['noLegacyBuild'] || false;
 	const serve = process.env['serve'] || false;
 	const target = process.env['target'] || 'dev';
 	const production = !process.env['ROLLUP_WATCH'];
@@ -35,8 +36,8 @@ async function getRollUpConfig() {
 	// Pre build Clean up of the output folder
 	await new Promise(res => rimraf(`./${config.outputFolder}/**`, res));
 	
-	
-	return rollUpConfigs.map((rollUpConfig, index) => {
+	return rollUpConfigs.filter((value, index) => !(noLegacyBuild && index === 1))
+		.map((rollUpConfig, index) => {
 		
 		const modernBuild = index === 0;
 		

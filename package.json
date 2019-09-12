@@ -2,7 +2,7 @@
 	"name": "bilan-energie",
 	"version": "0.0.1",
 	"scripts": {
-		"watch": "rollup -c build/rollup.config.js --environment target:dev,serve --watch",
+		"watch": "rollup -c build/rollup.config.js --environment target:dev,serve,noLegacyBuild --watch",
 		"build:dev": "rollup -c build/rollup.config.js --environment target:dev",
 		"serve:dev": "cd ./build/src/dev && superstatic --port 5000 --host localhost",
 		"build:devWeb": "rollup -c build/rollup.config.js --environment target:devWeb",
