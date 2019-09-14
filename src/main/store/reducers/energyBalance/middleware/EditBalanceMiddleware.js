@@ -18,7 +18,7 @@ export const editBalanceMiddleware = ({databaseDriver}) => {
 					
 					databaseDriver.push(`balances/${idToAdd}/inputs`, JSON.stringify(inputToAdd))
 						.then(createdRef => {
-							dispatch(balance_addInputWithId(inputToAdd, createdRef));
+							dispatch(balance_addInputWithId(inputToAdd, createdRef.key));
 						});
 					
 					break;
