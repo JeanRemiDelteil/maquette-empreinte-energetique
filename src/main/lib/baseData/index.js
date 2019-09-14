@@ -35,6 +35,7 @@ function processValues(values) {
 
 export const CATEGORY = 'CATEGORY';
 export const COEFS = 'COEFS';
+export const DEFAULT = '#Default#';
 
 /**
  * @param {{}} input
@@ -75,7 +76,7 @@ function process(data = []) {
 		
 		let ref = _addItemInCategory(output, activity, CATEGORY);
 		ref = _addItemInCategory(ref, category, CATEGORY);
-		ref = _addItemInCategory(ref, subCategory || '#Default#', COEFS);
+		ref = _addItemInCategory(ref, subCategory || DEFAULT, COEFS);
 		
 		
 		ref.baseKW = baseKW;

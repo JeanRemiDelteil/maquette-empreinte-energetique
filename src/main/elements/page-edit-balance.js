@@ -1,10 +1,12 @@
 import {html, LitElement} from 'lit-element';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu-light';
 import '@polymer/paper-listbox/paper-listbox';
-import '@polymer/paper-item/paper-item';
+import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
-import {calculateConsumption, CATEGORY, COEFS} from '../lib/baseData';
+
+import './icon-set';
+import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
 
 
 export class PageEditBalance extends LitElement {
@@ -62,8 +64,6 @@ export class PageEditBalance extends LitElement {
 		width: 100%;
 		
 		position: relative;
-		
-		padding: 2em;
 	}
 	
 	main {
@@ -74,17 +74,68 @@ export class PageEditBalance extends LitElement {
 		height: 100%;
 	}
 	
-	.child {
+	.child-main {
 		width: 50%;
+		padding: 2em;
+		box-sizing: border-box;
 	}
 	
-	paper-item {
-		user-select: none;
-		cursor: pointer;
+	/* style for input */
+	.consumption-input-btn-add:not([disabled]) {
+		margin-top: 1em;
+		
+		background-color: var(--paper-green-500);
+		color: white;
 	}
-	
-	paper-button[selected] {
+	.input-tab paper-button {
+		background-color: var(--app-card-color);
+		color: var(--app-card-text-color);
+	}
+	.input-tab paper-button[selected] {
 		background-color: var(--app-primary-color);
+		color: var(--app-secondary-text-color);
+	}
+	
+	/* style for balance list */
+	.consumption-list {
+		overflow-y: auto;
+	}
+	.balance-item {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 0.5em;
+		padding: 1em;
+		
+		background-color: var(--app-card-color);
+		color: var(--app-card-text-color);
+	}
+	.balance-item-type {
+		display: flex;
+		align-items: baseline;
+	}
+	.balance-item-type > paper-icon-button {
+		margin-left: auto;
+		color: var(--app-sub-text-color);
+	}
+	.balance-item-type > paper-icon-button:hover {
+		color: var(--app-card-text-color);
+	}
+	.balance-item-coefs {
+		display: flex;
+		flex-direction: row;
+		/*noinspection CssOverwrittenProperties*/
+		justify-content: space-around;
+		/*noinspection CssOverwrittenProperties*/
+		justify-content: space-evenly; /* keep the first for fall back */
+	}
+	.balance-item-coef {
+		margin-left: 1em;
+	}
+	.balance-item-coef-title {
+		color: var(--app-sub-text-color);
+	}
+	.balance-item-coef-value {
+		text-align: center;
 	}
 	
 	@media screen and (max-width: 999px) {
@@ -92,7 +143,7 @@ export class PageEditBalance extends LitElement {
 			flex-direction: column;
 		}
 		
-		.child {
+		.child-main {
 			width: 100%;
 		}
 	}
@@ -101,13 +152,13 @@ export class PageEditBalance extends LitElement {
 
 <main>
 	
-	<div class="child consumption-input">
+	<div class="child-main consumption-input">
 		${this._render_input(this.baseData, this.inputsData)}
 		
-		<paper-button ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
+		<paper-button class="consumption-input-btn-add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
 	</div>
 	
-	<div class="child consumption-list">
+	<div class="child-main consumption-list">
 		${this._render_balanceInputList(this.inputsList)}
 	</div>
 	
@@ -137,8 +188,8 @@ export class PageEditBalance extends LitElement {
 				
 				// On category without values, skip to coefs
 				level.type === CATEGORY
-				&& level.values['#Default#']
-				&& (level = level.values['#Default#']);
+				&& level.values[DEFAULT]
+				&& (level = level.values[DEFAULT]);
 				
 				if (level.type === CATEGORY && index + 1 < inputs.length) {
 					selectedChoice = inputs[index + 1];
@@ -219,8 +270,40 @@ export class PageEditBalance extends LitElement {
 	 * @private
 	 */
 	_render_balanceInputList(list) {
-		return list.map(item => html`<div>${JSON.stringify(item)}</div>`);
+		return list.map(item => html`
+<paper-card class="balance-item">
+	<div class="balance-item-type">	
+		<span>${this._render_balanceItem_title(item)}</span>
+		<paper-icon-button @click="${() => this.deleteBalanceItem(item)}" icon="app-icon:delete"></paper-icon-button>
+	</div>
+	<div class="balance-item-coefs">${item.coefs.map(coef => this._render_balanceItem_coef(coef))}</div>
+</paper-card>
+`);
 	}
+	
+	/**
+	 * @param {IConsumptionRef} item
+	 * @return {TemplateResult|TemplateResult[]}
+	 * @private
+	 */
+	_render_balanceItem_title(item) {
+		return html`${item.activity} > ${item.category}${!item.subCategory ? '' : ' > ' + item.subCategory}`;
+	}
+	
+	/**
+	 * @param {IBS_CoefValue} coef
+	 * @return {TemplateResult|TemplateResult[]}
+	 * @private
+	 */
+	_render_balanceItem_coef(coef) {
+		return html`
+<div class="balance-item-coef">
+	<div class="balance-item-coef-title">${coef.title}</div>
+	<div class="balance-item-coef-value">${coef.label}</div>
+</div>
+`;
+	}
+	
 	
 	//</editor-fold>
 	
@@ -305,4 +388,9 @@ export class PageEditBalance extends LitElement {
 		this.inputsCoefs = new Map();
 		this.inputsData = [];
 	}
+	
+	/**
+	 * @param {IConsumptionRef} item
+	 */
+	deleteBalanceItem(item) {}
 }

@@ -11,11 +11,15 @@
 		"deploy:prod": "cd ./build/src/prod && firebase deploy"
 	},
 	"dependencies": {
+		"@polymer/iron-icon": "^3.0.1",
+		"@polymer/iron-iconset-svg": "^3.0.1",
 		"@polymer/paper-button": "^3.0.1",
 		"@polymer/paper-card": "^3.0.1",
 		"@polymer/paper-dropdown-menu": "^3.0.1",
+		"@polymer/paper-icon-button": "^3.0.2",
 		"@polymer/paper-item": "^3.0.1",
 		"@polymer/paper-listbox": "^3.0.1",
+		"@polymer/polymer": "^3.3.0",
 		"firebase": "^6.3.4",
 		"highcharts": "^7.1.2",
 		"lit-element": "^2.2.0",

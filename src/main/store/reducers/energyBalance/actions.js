@@ -1,4 +1,4 @@
-import {EB_ADD_ACTION, EB_BALANCE_INPUT_ADD, EB_CREATE, EB_LOAD_BALANCE, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
+import {EB_ADD_ACTION, EB_BALANCE_INPUT_ADD, EB_BALANCE_INPUT_DELETE, EB_CREATE, EB_LOAD_BALANCE, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
 
 
 /**
@@ -38,6 +38,13 @@ export const balanceLoadFailed = (id, error) => ({
 
 export const balance_addInput = (input) => ({
 	type: EB_BALANCE_INPUT_ADD,
+	payload: {
+		input,
+	},
+});
+
+export const balance_deleteRef = (input) => ({
+	type: EB_BALANCE_INPUT_DELETE,
 	payload: {
 		input,
 	},

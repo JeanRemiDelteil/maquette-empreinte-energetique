@@ -1,7 +1,7 @@
 import {connect} from '../store/store';
 import {PageEditBalance} from '../elements/page-edit-balance';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
-import {balance_addInput} from '../store/reducers/energyBalance/actions';
+import {balance_addInput, balance_deleteRef} from '../store/reducers/energyBalance/actions';
 import {baseDataLoad} from '../store/reducers/baseData/actions';
 import {selectBaseData} from '../store/reducers/baseData/selectors';
 
@@ -40,6 +40,13 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	 */
 	addSelection(ref) {
 		this.store.dispatch(balance_addInput(ref));
+	}
+	
+	/**
+	 * @param {IConsumptionRef} item
+	 */
+	deleteBalanceItem(item) {
+		this.store.dispatch(balance_deleteRef(item));
 	}
 	
 }
