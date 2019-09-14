@@ -8,4 +8,6 @@ interface IFirebaseDatabaseDriver {
 	push(path: string, value?: any): Promise<firebase.database.ThenableReference>
 	
 	update(path: string, valueMap: any): Promise<any>
+	
+	delete(path: string): Promise<any>
 }

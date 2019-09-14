@@ -78,7 +78,7 @@ export class AppMain extends connect(LitElement) {
 		left: 0;
 		right: 0;
 		
-		--app-primary-color: #c97300;
+		--app-primary-color: var(--paper-indigo-500);
 		--app-primary-text-color: white;
 		--app-secondary-color: #0081f5;
 		--app-secondary-text-color: white;

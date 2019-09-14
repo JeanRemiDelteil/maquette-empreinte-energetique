@@ -41,8 +41,14 @@ export const newBalanceMiddleware = ({databaseDriver, navigateTo}) => {
 					databaseDriver.read(`balances/${balanceId}`)
 						.then(snap => {
 							const data = snap.val() || {};
+							const inputs = data['inputs'] || {};
 							
-							dispatch(balanceLoaded(balanceId, data));
+							dispatch(balanceLoaded(balanceId, {
+								inputs: Object.keys(inputs).map((key => ({
+									id: key,
+									data: JSON.parse(inputs[key]),
+								}))),
+							}));
 						})
 						.catch(err => {
 							dispatch(balanceLoadFailed(balanceId, err));

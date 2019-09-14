@@ -81,19 +81,33 @@ export class PageEditBalance extends LitElement {
 	}
 	
 	/* style for input */
+	.consumption-input {
+		overflow-y: auto;
+	}
 	.consumption-input-btn-add:not([disabled]) {
 		margin-top: 1em;
 		
 		background-color: var(--paper-green-500);
 		color: white;
 	}
+	.category-label {
+		margin-bottom: 1em;
+	}
 	.input-tab paper-button {
+		margin-bottom: 1em;
+		
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
 	}
 	.input-tab paper-button[selected] {
 		background-color: var(--app-primary-color);
 		color: var(--app-secondary-text-color);
+	}
+	.coefs-title{
+		margin-bottom: 1em;
+	}
+	.coef-item-label{
+		margin-bottom: 1em;
 	}
 	
 	/* style for balance list */
@@ -227,7 +241,7 @@ export class PageEditBalance extends LitElement {
 		this._selectedCoefs = coefs;
 		
 		return html`
-<div>coefs</div>
+<div class="coefs-title">Paramètres</div>
 <div>
 	${coefs.coefs.map(coef => html`
 	<div class="coef-item">
@@ -265,7 +279,7 @@ export class PageEditBalance extends LitElement {
 	
 	
 	/**
-	 * @param {Array<IConsumptionRef>} list
+	 * @param {Array<IS_EBalance_Input>} list
 	 * @return {TemplateResult|TemplateResult[]}
 	 * @private
 	 */
@@ -273,10 +287,10 @@ export class PageEditBalance extends LitElement {
 		return list.map(item => html`
 <paper-card class="balance-item">
 	<div class="balance-item-type">	
-		<span>${this._render_balanceItem_title(item)}</span>
-		<paper-icon-button @click="${() => this.deleteBalanceItem(item)}" icon="app-icon:delete"></paper-icon-button>
+		<span>${this._render_balanceItem_title(item.data)}</span>
+		<paper-icon-button @click="${() => this.deleteBalanceItem(item.id)}" icon="app-icon:delete"></paper-icon-button>
 	</div>
-	<div class="balance-item-coefs">${item.coefs.map(coef => this._render_balanceItem_coef(coef))}</div>
+	<div class="balance-item-coefs">${item.data.coefs.map(coef => this._render_balanceItem_coef(coef))}</div>
 </paper-card>
 `);
 	}
@@ -390,7 +404,7 @@ export class PageEditBalance extends LitElement {
 	}
 	
 	/**
-	 * @param {IConsumptionRef} item
+	 * @param {string} itemId
 	 */
-	deleteBalanceItem(item) {}
+	deleteBalanceItem(itemId) {}
 }

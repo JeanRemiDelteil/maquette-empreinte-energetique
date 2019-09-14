@@ -39,14 +39,14 @@ export class AppEditBalance extends connect(PageEditBalance) {
 	 * @param {IConsumptionRef} ref
 	 */
 	addSelection(ref) {
-		this.store.dispatch(balance_addInput(ref));
+		this.store.dispatch(balance_addInput(this.id, ref));
 	}
 	
 	/**
-	 * @param {IConsumptionRef} item
+	 * @param {string} itemId
 	 */
-	deleteBalanceItem(item) {
-		this.store.dispatch(balance_deleteRef(item));
+	deleteBalanceItem(itemId) {
+		this.store.dispatch(balance_deleteRef(this.id, itemId));
 	}
 	
 }
