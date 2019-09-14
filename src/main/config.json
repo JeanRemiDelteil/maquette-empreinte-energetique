@@ -6,5 +6,9 @@
 		"databaseURL": "https://bilan-energie-dev.firebaseio.com",
 		"projectId": "bilan-energie-dev",
 		"appId": "1:828561284868:web:a98aba8e0e341344"
+	},
+	"configInputData": {
+		"path": "1MHli4aDVz_s2EFeQapA0JS-aTvSbn6LsesFs3bo8VPM!Inputs!A3:M",
+		"apiKey": "AIzaSyA4T9FTPAde5hKOG2ROjVT9HOAIoMrjZ64"
 	}
 }

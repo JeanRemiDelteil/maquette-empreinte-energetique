@@ -1,7 +1,25 @@
+import {configInputData} from '../../config.json';
+
+
 async function getRawData() {
-	const module = await import('./baseData.json');
+	const [spsId, sheetName, range] = configInputData.path.split('!');
 	
-	return module.default;
+	return await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spsId}/values/${sheetName}!${range}?key=${configInputData.apiKey}`)
+		.then(fetchRes => fetchRes.json())
+		.then(data => {
+			if (data.error) throw data.error;
+			if (!data.values) throw {code: 0, message: 'No values found', status: 'NO_VALUES'};
+			
+			return data.values;
+		})
+		.catch(async err => {
+			console.error(err);
+			console.log('Fallback to static data');
+			
+			const module = await import('./baseData.json');
+			
+			return module.default;
+		});
 }
 
 
