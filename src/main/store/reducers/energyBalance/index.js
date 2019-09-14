@@ -1,4 +1,4 @@
-import {EB_ADD_ACTION, EB_BALANCE_INPUT_ADD, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
+import {EB_ADD_ACTION, EB_BALANCE_INPUT_ADD, EB_BALANCE_INPUT_DELETE, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
 import {combineReducers} from 'redux';
 
 
@@ -19,14 +19,14 @@ function actions(state = [], action) {
 	return state;
 }
 
+
 function balance(state = {}, action) {
 	switch (action.type) {
 		case EB_LOAD_BALANCE_SUCCESS:
 			return {
 				id: action.payload.id,
-				data: {
-					...(action.payload.data || {}),
-				},
+				inputs: [],
+				...(action.payload.data || {}),
 			};
 		
 		case EB_LOAD_BALANCE_FAILURE:
@@ -36,18 +36,26 @@ function balance(state = {}, action) {
 			};
 		
 		case EB_BALANCE_INPUT_ADD:
-			const data = state.data || {};
-			const input = action.payload.input || '';
+			const inputToAdd = action.payload.input || '';
+			if (!inputToAdd) break;
 			
 			return {
 				...state,
-				data: {
-					...data,
-					inputs: [
-						...(data.inputs || []),
-						...([input] || []),
-					],
-				},
+				inputs: [
+					...state.inputs,
+					inputToAdd,
+				],
+			};
+		
+		case EB_BALANCE_INPUT_DELETE:
+			const inputToDelete = action.payload.input || '';
+			if (!inputToDelete) break;
+			
+			return {
+				...state,
+				inputs: [
+					...state.inputs.filter(input => input !== inputToDelete),
+				],
 			};
 	}
 	
