@@ -46,10 +46,10 @@ declare interface IConsumptionRef {
 	}
 	coefs: IBS_CoefValue[]; // index of the selected values
 	
-	calculatedValue?: IBSC_calculatedValue;
+	values?: IBSC_OutputValues;
 }
 
-declare interface IBSC_calculatedValue {
+declare interface IBSC_OutputValues {
 	kW: number
 	CO2: number
 }

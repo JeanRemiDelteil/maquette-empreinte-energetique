@@ -66,3 +66,161 @@ export function dataConverter(rawActions) {
 function getActionWeight({category, type, value}) {
 	return ((actionsWeights[category] || {})[type] || (val => val || 0))(value);
 }
+
+
+/**
+ * @param {Array<IS_EBalance_Input>} inputs
+ * @param {Array<string>} aggregateBy
+ *
+ * @return {IP_Aggregates}
+ */
+export function processAggregates(inputs, aggregateBy) {
+	
+	/**
+	 * @type {IP_Aggregates}
+	 */
+	const root = {
+		/**
+		 * @type {Map<IP_Aggregates>}
+		 */
+		items: new Map(),
+		/**
+		 * @type {IBSC_OutputValues}
+		 */
+		values: null,
+	};
+	
+	/**
+	 * @type {Array<Array<IP_Aggregates>>}
+	 */
+	const levels = [
+		[root],
+		...aggregateBy.map(() => []),
+	];
+	
+	// Build aggregation tree
+	inputs.forEach(({id, data}) => {
+		let aggregateIn = root.items;
+		
+		aggregateBy.forEach((prop, index) => {
+			const category = data[prop];
+			
+			// Init new category item
+			if (!aggregateIn.has(category)) {
+				const newItemMap = {
+					items: new Map(),
+					values: null,
+				};
+				
+				aggregateIn.set(category, newItemMap);
+				
+				// remember all Maps to quickly process them later
+				levels[index + 1].push(newItemMap);
+			}
+			
+			aggregateIn = aggregateIn.get(category).items;
+		});
+		
+		aggregateIn.set(id, data);
+	});
+	
+	// Calculate every levels value, starting leaves to root
+	levels
+		.reverse()
+		.forEach(aggregates => aggregates
+			.forEach(aggregate => {
+					aggregate.values = {
+						kW: 0,
+						CO2: 0,
+					};
+					
+					aggregate.items.forEach((item => {
+						aggregate.values.CO2 += item.values.CO2;
+						aggregate.values.kW += item.values.kW;
+					}));
+				},
+			),
+		);
+	
+	return root;
+}
+
+/**
+ * @param {IP_Aggregates} aggregates
+ * @param {Array<string>} path
+ */
+export function getDrilldownData(aggregates, path) {
+	let startAggregate = aggregates;
+	
+	// Find series by path
+	path.forEach(categoryName => {
+		startAggregate = startAggregate.items.get(categoryName);
+		
+		if (!startAggregate) throw 'No Category found';
+	});
+	
+	
+	// Build the output
+	const output = {
+		kW: [],
+		CO2: [],
+	};
+	const drilldown = {
+		kW: [],
+		CO2: [],
+	};
+	
+	/**
+	 * @param {Map} items
+	 * @param {string} propName
+	 */
+	function getDrillDownValue(items, propName) {
+		const arr = [];
+		
+		items.forEach((value, key) => {
+			arr.push({
+				name: key,
+				y: value.values[propName],
+			});
+		});
+		
+		return arr;
+	}
+	
+	startAggregate.items.forEach((category, key) => {
+		output.kW.push({
+			name: key,
+			drilldown: key,
+			y: category.values.kW,
+		});
+		output.CO2.push({
+			name: key,
+			drilldown: key,
+			y: category.values.CO2,
+		});
+		
+		drilldown.kW.push({
+			name: key,
+			id: key,
+			data: getDrillDownValue(category.items, 'kW'),
+		});
+		drilldown.CO2.push({
+			name: key,
+			id: key,
+			data: getDrillDownValue(category.items, 'CO2'),
+		});
+	});
+	
+	return {
+		kW: {
+			main: output.kW,
+			drilldown: {series: drilldown.kW},
+		},
+		CO2: {
+			main: output.CO2,
+			drilldown: {series: drilldown.CO2},
+		},
+	};
+}
+
+window['getDrilldownData'] = getDrilldownData;

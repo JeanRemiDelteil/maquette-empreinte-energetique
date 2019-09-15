@@ -2,7 +2,12 @@ import {html, LitElement} from 'lit-element';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 
+import './highcharts-pie';
 import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
+
+
+const PIE_CHART_KW = 'pieChart-kW';
+const PIE_CHART_CO2 = 'pieChart-CO2';
 
 
 export class PageShowBalance extends LitElement {
@@ -13,8 +18,10 @@ export class PageShowBalance extends LitElement {
 	
 	static get properties() {
 		return {
-			inputsList: {type: Array},
 			id: {type: String},
+			
+			seriesKW: {type: Object},
+			seriesCO2: {type: Object},
 		};
 	}
 	
@@ -23,10 +30,7 @@ export class PageShowBalance extends LitElement {
 		
 		this.id = '';
 		
-		/**
-		 * @type {Array<IS_EBalance_Input>}
-		 */
-		this.inputsList = [];
+		this._chartMap = {};
 	}
 	
 	//<editor-fold desc="# Renderers">
@@ -79,7 +83,16 @@ export class PageShowBalance extends LitElement {
 
 <main>
 	<div class="top-container">
-		<div class="child-main"></div>
+		<highcharts-pie
+			id="${PIE_CHART_KW}"
+			title="Graphique des consommations en kW/h/km/pers"
+			@pie-ready="${() => this._onPieLoad(PIE_CHART_KW, this.seriesKW)}"
+		></highcharts-pie>
+		<highcharts-pie
+			id="${PIE_CHART_CO2}"
+			title="Graphique des consommations en g de CO2 /km/pers"
+			@pie-ready="${() => this._onPieLoad(PIE_CHART_CO2, this.seriesCO2)}"
+		></highcharts-pie>
 	</div>
 	
 	<div class="action-menu">
@@ -96,4 +109,57 @@ export class PageShowBalance extends LitElement {
 	
 	//</editor-fold>
 	
+	//<editor-fold desc="# LitElement lifecycle">
+	
+	updated(changedProperties) {
+		
+		changedProperties.forEach((oldValue, propName) => {
+			// noinspection JSRedundantSwitchStatement
+			switch (propName) {
+				case 'seriesKW':
+					this._updatePie(this._chartMap[PIE_CHART_KW], this.seriesKW);
+					break;
+				
+				case 'seriesCO2':
+					this._updatePie(this._chartMap[PIE_CHART_CO2], this.seriesCO2);
+					break;
+				
+			}
+		});
+		
+	}
+	
+	//</editor-fold>
+	
+	
+	/**
+	 * @param {string} elemId
+	 * @param series
+	 * @private
+	 */
+	_onPieLoad(elemId, series) {
+		let pieChart = this._chartMap[elemId] = this.shadowRoot.querySelector('#' + elemId);
+		
+		// noinspection JSUnresolvedFunction
+		pieChart.chart.addSeries({
+			name: '',
+			colorByPoint: true,
+			data: [],
+		});
+		
+		pieChart.chart.redraw();
+		
+		series && this._updatePie(pieChart, series);
+	}
+	
+	
+	_updatePie(pieChart, series) {
+		if (!pieChart || !pieChart.chart) return;
+		
+		const {main, drilldown} = series;
+		
+		pieChart.chart.drillUp();
+		pieChart.chart.series[0].setData(main);
+		pieChart.chart.drilldown.update(drilldown);
+	}
 }

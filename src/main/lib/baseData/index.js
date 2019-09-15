@@ -143,7 +143,7 @@ export function calculateConsumption(ref) {
 	
 	return {
 		...ref,
-		calculatedValue: {
+		values: {
 			kW: ref.baseValues.baseKW * coefMul,
 			CO2: ref.baseValues.baseCO2 * coefMul,
 		},
