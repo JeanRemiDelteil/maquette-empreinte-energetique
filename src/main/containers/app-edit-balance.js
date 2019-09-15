@@ -5,6 +5,7 @@ import {balance_addInput, balance_deleteRef} from '../store/reducers/energyBalan
 import {baseDataLoad} from '../store/reducers/baseData/actions';
 import {selectBaseData} from '../store/reducers/baseData/selectors';
 
+let baseDataLoaded = false;
 
 export class AppEditBalance extends connect(PageEditBalance) {
 	
@@ -16,7 +17,7 @@ export class AppEditBalance extends connect(PageEditBalance) {
 		super();
 		
 		// Init base data
-		this.store.dispatch(baseDataLoad());
+		!baseDataLoaded && this.store.dispatch(baseDataLoad());
 	}
 	
 	
@@ -28,6 +29,7 @@ export class AppEditBalance extends connect(PageEditBalance) {
 		this.id = getBalanceId(this.balance);
 		
 		this.baseData = selectBaseData(state);
+		baseDataLoaded = !!this.baseData;
 		
 		this.inputsList = getBalanceInputs(this.balance);
 	}

@@ -14,6 +14,13 @@ const router = new Router([
 		importLazy: () => import('../containers/app-edit-balance'),
 	},
 	{
+		name: 'Graphs',
+		pattern: /^\/empreinte-energie\/([^/]+)\/graphiques$/,
+		
+		load: () => html`<app-show-balance></app-show-balance>`,
+		importLazy: () => import('../containers/app-show-balance'),
+	},
+	{
 		name: 'Create',
 		pattern: /^\/empreinte-energie(?:\/.*)?$/,
 		

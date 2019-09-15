@@ -7,6 +7,7 @@ import '@polymer/paper-card/paper-card';
 
 import './icon-set';
 import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
+import {LG_ACTION_STATISTIQUE, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
 export class PageEditBalance extends LitElement {
@@ -51,6 +52,9 @@ export class PageEditBalance extends LitElement {
 		 */
 		this._selectedCoefs = null;
 		
+		/**
+		 * @type {Array<IS_EBalance_Input>}
+		 */
 		this.inputsList = [];
 	}
 	
@@ -66,21 +70,40 @@ export class PageEditBalance extends LitElement {
 		position: relative;
 	}
 	
+	/**<editor-fold desc="style main layout">*/
 	main {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		
 		width: 100%;
 		height: 100%;
 	}
-	
+	.top-container {
+		flex: auto;
+		display: flex;
+		overflow: auto;
+	}
 	.child-main {
 		width: 50%;
 		padding: 2em;
 		box-sizing: border-box;
 	}
+	.action-menu {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: space-between;
+		padding: 1em;
+	}
+	.action-menu paper-button:not([disabled]) {
+		background-color: white;
+		color: var(--app-card-text-color);
+	}
+	.action-menu a {
+		text-decoration: none;
+	}
+	/**</editor-fold>*/
 	
-	/* style for input */
+	/**<editor-fold desc="style for input">*/
 	.consumption-input {
 		overflow-y: auto;
 	}
@@ -109,8 +132,9 @@ export class PageEditBalance extends LitElement {
 	.coef-item-label{
 		margin-bottom: 1em;
 	}
+	/**</editor-fold>*/
 	
-	/* style for balance list */
+	/**<editor-fold desc="style for balance list">*/
 	.consumption-list {
 		overflow-y: auto;
 	}
@@ -151,6 +175,8 @@ export class PageEditBalance extends LitElement {
 	.balance-item-coef-value {
 		text-align: center;
 	}
+	/**</editor-fold>*/
+	
 	
 	@media screen and (max-width: 999px) {
 		main {
@@ -166,16 +192,26 @@ export class PageEditBalance extends LitElement {
 
 <main>
 	
-	<div class="child-main consumption-input">
-		${this._render_input(this.baseData, this.inputsData)}
+	<div class="top-container">
+		<div class="child-main consumption-input">
+			${this._render_input(this.baseData, this.inputsData)}
+			
+			<paper-button class="consumption-input-btn-add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" ?raised="${this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
+		</div>
 		
-		<paper-button class="consumption-input-btn-add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
+		<div class="child-main consumption-list">
+			${this._render_balanceInputList(this.inputsList)}
+		</div>
 	</div>
 	
-	<div class="child-main consumption-list">
-		${this._render_balanceInputList(this.inputsList)}
+	<div class="action-menu">
+		<a class="btn-return-create" href="/empreinte-energie/create">
+			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
+		</a>
+		<a class="btn-show-stats" href="/empreinte-energie/${this.id}/graphiques">
+			<paper-button raised ?disabled="${!this._isStatAvailable(this.inputsList)}">${LG_ACTION_STATISTIQUE}</paper-button>
+		</a>
 	</div>
-	
 </main>
 `;
 	}
@@ -364,6 +400,15 @@ export class PageEditBalance extends LitElement {
 			       .every(coef => coefs.has(coef));
 	}
 	
+	/**
+	 * @param {Array<IS_EBalance_Input>} inputList
+	 *
+	 * @return {boolean}
+	 * @private
+	 */
+	_isStatAvailable(inputList) {
+		return !!inputList.length;
+	}
 	
 	_addSelection() {
 		/**
