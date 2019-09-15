@@ -65,7 +65,7 @@ export class Router {
 					Router._autoDefineLitElementClass(module);
 				});
 			
-			this._currentRouteOutput = route.load();
+			this._currentRouteOutput = route.load(route, path);
 			return this._currentRouteOutput;
 		}
 		

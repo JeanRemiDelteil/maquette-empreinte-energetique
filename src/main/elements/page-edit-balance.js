@@ -1,13 +1,11 @@
 import {html, LitElement} from 'lit-element';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu-light';
-import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 
 import './icon-set';
 import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
-import {LG_ACTION_STATISTIQUE, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
+import {LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
 export class PageEditBalance extends LitElement {
@@ -209,7 +207,7 @@ export class PageEditBalance extends LitElement {
 			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
 		</a>
 		<a class="btn-show-stats" href="/empreinte-energie/${this.id}/graphiques">
-			<paper-button raised ?disabled="${!this._isStatAvailable(this.inputsList)}">${LG_ACTION_STATISTIQUE}</paper-button>
+			<paper-button raised ?disabled="${!this._isStatAvailable(this.inputsList)}">${LG_ACTION_STATISTICS}</paper-button>
 		</a>
 	</div>
 </main>

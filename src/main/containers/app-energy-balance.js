@@ -1,7 +1,10 @@
-import {connect} from '../store/store';
+import {html, LitElement} from 'lit-element';
+
+import {connect, store} from '../store/store';
+import {loadBalance} from '../store/reducers/energyBalance/actions';
 import {getLocationPath} from '../store/reducers/router/selectors';
 import {Router} from '../lib/router/Router';
-import {html, LitElement} from 'lit-element';
+import {getBalance, getBalanceId} from '../store/reducers/energyBalance/selectors';
 
 
 // Define Router only once (not on every element creation)
@@ -10,14 +13,28 @@ const router = new Router([
 		name: 'Edit',
 		pattern: /^\/empreinte-energie\/([^/]+)\/modifier$/,
 		
-		load: () => html`<app-edit-balance></app-edit-balance>`,
+		load: (route, path) => {
+			const [, id] = route.pattern.exec(path) || [];
+			id
+			&& id !== getBalanceId(getBalance(store.getState()))
+			&& store.dispatch(loadBalance(id));
+			
+			return html`<app-edit-balance></app-edit-balance>`;
+		},
 		importLazy: () => import('../containers/app-edit-balance'),
 	},
 	{
 		name: 'Graphs',
 		pattern: /^\/empreinte-energie\/([^/]+)\/graphiques$/,
 		
-		load: () => html`<app-show-balance></app-show-balance>`,
+		load: (route, path) => {
+			const [, id] = route.pattern.exec(path) || [];
+			id
+			&& id !== getBalanceId(getBalance(store.getState()))
+			&& store.dispatch(loadBalance(id));
+			
+			return html`<app-show-balance></app-show-balance>`;
+		},
 		importLazy: () => import('../containers/app-show-balance'),
 	},
 	{

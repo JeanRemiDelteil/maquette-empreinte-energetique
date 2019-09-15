@@ -1,6 +1,5 @@
 import {EB_CREATE, EB_LOAD_BALANCE} from '../types';
-import {balanceLoaded, balanceLoadFailed, loadBalance} from '../actions';
-import {NAVIGATE_TO} from '../../router/types';
+import {balanceLoaded, balanceLoadFailed} from '../actions';
 
 
 /**
@@ -20,17 +19,9 @@ export const newBalanceMiddleware = ({databaseDriver, navigateTo}) => {
 						.then(createdRef => {
 							window.history.pushState({}, '', `/empreinte-energie/${createdRef.key}/modifier`);
 							dispatch(navigateTo(window.location));
+							
+							// The router will catch the new route and fire the EB_LOAD_BALANCE action if necessary
 						});
-					
-					break;
-				
-				case NAVIGATE_TO:
-					const pathName = action.payload.pathname;
-					const [, id] = /^\/empreinte-energie\/([^/]+)\/modifier$/.exec(pathName) || [];
-					
-					if (!id) break;
-					
-					dispatch(loadBalance(id));
 					
 					break;
 				

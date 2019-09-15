@@ -4,7 +4,7 @@ declare namespace Router {
 		name: string
 		pattern: RegExp
 		
-		load(): string
+		load(route: Route, path: string): string
 		
 		importLazy(): Promise<void>
 	}
