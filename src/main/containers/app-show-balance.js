@@ -3,6 +3,8 @@ import {connect} from '../store/store';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
 import {getDrilldownData, processAggregates} from '../lib/dataConverter';
 
+// Source: https://jancovici.com/transition-energetique/l-energie-et-nous/combien-suis-je-un-esclavagiste/
+const COEF_SLAVES = 1919;
 
 export class AppShowBalance extends connect(PageShowBalance) {
 	
@@ -31,7 +33,10 @@ export class AppShowBalance extends connect(PageShowBalance) {
 		this.series = getDrilldownData(this.aggregates, []);
 		
 		this.seriesKW = this.series.kW;
-		this.seriesCO2 = this.series.CO2;
+		
+		this.numberSlaves = this.aggregates.values.kW / COEF_SLAVES;
+		
+		// no CO2 for now
 	}
 	
 	//</editor-fold>

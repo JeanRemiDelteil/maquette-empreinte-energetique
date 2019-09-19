@@ -7,7 +7,7 @@ import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-
 
 
 const PIE_CHART_KW = 'pieChart-kW';
-const PIE_CHART_CO2 = 'pieChart-CO2';
+const PIE_CHART_KW_SUB = 'pieChart-kW-sub';
 
 
 export class PageShowBalance extends LitElement {
@@ -21,7 +21,8 @@ export class PageShowBalance extends LitElement {
 			id: {type: String},
 			
 			seriesKW: {type: Object},
-			seriesCO2: {type: Object},
+			detailsKwTitle: {type: String},
+			numberSlaves: {type: Number},
 		};
 	}
 	
@@ -30,7 +31,17 @@ export class PageShowBalance extends LitElement {
 		
 		this.id = '';
 		
-		this._chartMap = {};
+		this.seriesKW = null;
+		this.detailsKwTitle = 'Détails des consommations en kWh';
+		this.numberSlaves = 0;
+		
+		/**
+		 * @type {Object<string, Highcharts.Chart>}
+		 */
+		this._chartMap = {
+			[PIE_CHART_KW]: null,
+			[PIE_CHART_KW_SUB]: null,
+		};
 	}
 	
 	//<editor-fold desc="# Renderers">
@@ -53,16 +64,6 @@ export class PageShowBalance extends LitElement {
 		width: 100%;
 		height: 100%;
 	}
-	.top-container {
-		flex: auto;
-		display: flex;
-		overflow: auto;
-	}
-	.child-main {
-		width: 50%;
-		padding: 2em;
-		box-sizing: border-box;
-	}
 	.action-menu {
 		flex-shrink: 0;
 		display: flex;
@@ -78,6 +79,18 @@ export class PageShowBalance extends LitElement {
 	}
 	/**</editor-fold>*/
 	
+	.top-container {
+		flex: auto;
+		display: flex;
+		flex-wrap: wrap;
+		
+		overflow: auto;
+	}
+	.child-container {
+		width: 50%;
+		height: 50%;
+	}
+	
 	
 </style>
 
@@ -85,14 +98,23 @@ export class PageShowBalance extends LitElement {
 	<div class="top-container">
 		<highcharts-pie
 			id="${PIE_CHART_KW}"
-			title="Graphique des consommations en kW/h/km/pers"
-			@pie-ready="${() => this._onPieLoad(PIE_CHART_KW, this.seriesKW)}"
+			class="child-container"
+			title="Consommations en kWh"
+			@pie-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
+			@chart-drilldown="${this._onMasterDrilldown}"
 		></highcharts-pie>
 		<highcharts-pie
-			id="${PIE_CHART_CO2}"
-			title="Graphique des consommations en g de CO2 /km/pers"
-			@pie-ready="${() => this._onPieLoad(PIE_CHART_CO2, this.seriesCO2)}"
+			id="${PIE_CHART_KW_SUB}"
+			class="child-container"
+			title="${this.detailsKwTitle}"
+			@pie-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
 		></highcharts-pie>
+		
+		<div class="child-container"></div>
+		<div class="child-container">
+			<span>${this.numberSlaves}</span>
+			<span>ESCLAVES</span>
+		</div>
 	</div>
 	
 	<div class="action-menu">
@@ -117,11 +139,7 @@ export class PageShowBalance extends LitElement {
 			// noinspection JSRedundantSwitchStatement
 			switch (propName) {
 				case 'seriesKW':
-					this._updatePie(this._chartMap[PIE_CHART_KW], this.seriesKW);
-					break;
-				
-				case 'seriesCO2':
-					this._updatePie(this._chartMap[PIE_CHART_CO2], this.seriesCO2);
+					this._updatePie(this._chartMap[PIE_CHART_KW], this.seriesKW.main, {allowPointSelect: true});
 					break;
 				
 			}
@@ -135,31 +153,56 @@ export class PageShowBalance extends LitElement {
 	/**
 	 * @param {string} elemId
 	 * @param series
+	 * @param {{}} additionalOptions
 	 * @private
 	 */
-	_onPieLoad(elemId, series) {
+	_setupPieChart(elemId, series, additionalOptions = {}) {
 		let pieChart = this._chartMap[elemId] = this.shadowRoot.querySelector('#' + elemId);
 		
-		// noinspection JSUnresolvedFunction
-		pieChart.chart.addSeries({
-			name: '',
-			colorByPoint: true,
-			data: [],
-		});
+		this._updatePie(pieChart, series && series.main || [], additionalOptions);
+	}
+	
+	/**
+	 * @param {CustomEvent<IEvents.Drilldown>} event
+	 * @private
+	 */
+	_onMasterDrilldown(event) {
+		const subSeries = event.detail.point.options.drilldown;
+		const drilldownSeries = this.seriesKW.drilldown.index[subSeries];
 		
-		pieChart.chart.redraw();
+		this.detailsKwTitle = `Détails des consommations "${subSeries}" en kWh`;
 		
-		series && this._updatePie(pieChart, series);
+		const series = drilldownSeries && drilldownSeries.data || null;
+		
+		this._updatePie(this._chartMap[PIE_CHART_KW_SUB], series);
 	}
 	
 	
-	_updatePie(pieChart, series) {
+	_updatePie(pieChart, data, additionalOptions) {
 		if (!pieChart || !pieChart.chart) return;
 		
-		const {main, drilldown} = series;
+		// Clear chart
+		pieChart.chart.series.forEach(series => series.remove());
 		
-		pieChart.chart.drillUp();
-		pieChart.chart.series[0].setData(main);
-		pieChart.chart.drilldown.update(drilldown);
+		pieChart.chart.addSeries({
+			type: 'pie',
+			name: '',
+			colorByPoint: true,
+			data: data,
+			animation: {
+				duration: 0,
+			},
+			size: '75%',
+			dataLabels: {
+				enabled: true,
+				format: `{point.name}: {point.y:,.1f} kWh`,
+			},
+			tooltip: {
+				enabled: true,
+				pointFormat: `{point.name}: {point.y:,.1f} kWh`,
+			},
+			// allowPointSelect: true,
+			...additionalOptions,
+		});
 	}
 }

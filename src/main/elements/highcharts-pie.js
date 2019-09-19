@@ -54,11 +54,27 @@ export class HighchartsPie extends LitElement {
 				plotBorderWidth: null,
 				plotShadow: false,
 				type: 'pie',
+				events: {
+					drilldown: (event) => {
+						this.dispatchEvent(new CustomEvent('chart-drilldown', {
+							bubbles: true,
+							composed: true,
+							detail: event,
+						}));
+					},
+					drillup: (event) => {
+						this.dispatchEvent(new CustomEvent('chart-drillup', {
+							bubbles: true,
+							composed: true,
+							detail: event,
+						}));
+					},
+				},
 			},
 			title: {
 				text: this.title,
 			},
-			tooltip: {
+			/*tooltip: {
 				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
 			},
 			plotOptions: {
@@ -73,7 +89,7 @@ export class HighchartsPie extends LitElement {
 						},
 					},
 				},
-			},
+			 },*/
 		});
 		
 		this.dispatchEvent(new CustomEvent('pie-ready', {
@@ -100,11 +116,11 @@ export class HighchartsPie extends LitElement {
 		return html`
 <style>
 	:host {
-		display: block;
+		display: flex;
 	}
 </style>
 
-<div id="chartRoot"></div>`;
+<div id="chartRoot" style="width: 100%; height: 100%;"></div>`;
 	}
 	
 	//</editor-fold>

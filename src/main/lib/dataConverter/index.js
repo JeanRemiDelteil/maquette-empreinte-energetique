@@ -167,7 +167,9 @@ export function getDrilldownData(aggregates, path) {
 	};
 	const drilldown = {
 		kW: [],
+		indexKW: {},
 		CO2: [],
+		indexCO2: {},
 	};
 	
 	/**
@@ -199,12 +201,12 @@ export function getDrilldownData(aggregates, path) {
 			y: category.values.CO2,
 		});
 		
-		drilldown.kW.push({
+		drilldown.kW.push(drilldown.indexKW[key] = {
 			name: key,
 			id: key,
 			data: getDrillDownValue(category.items, 'kW'),
 		});
-		drilldown.CO2.push({
+		drilldown.CO2.push(drilldown.indexCO2[key] = {
 			name: key,
 			id: key,
 			data: getDrillDownValue(category.items, 'CO2'),
@@ -214,11 +216,17 @@ export function getDrilldownData(aggregates, path) {
 	return {
 		kW: {
 			main: output.kW,
-			drilldown: {series: drilldown.kW},
+			drilldown: {
+				series: drilldown.kW,
+				index: drilldown.indexKW,
+			},
 		},
 		CO2: {
 			main: output.CO2,
-			drilldown: {series: drilldown.CO2},
+			drilldown: {
+				series: drilldown.CO2,
+				index: drilldown.indexCO2,
+			},
 		},
 	};
 }
