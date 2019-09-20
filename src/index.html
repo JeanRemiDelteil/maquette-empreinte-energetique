@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	
 	<title>Bilan énergétique</title>
 	
 	<base href="/">
@@ -9,6 +11,14 @@
 	<!-- Firebase -->
 	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js" defer></script>
 	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js" defer></script>
+	
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:600&display=swap" rel="stylesheet">
+	
+	<style>
+		:root {
+			font-family: 'Open Sans', sans-serif;
+		}
+	</style>
 	
 	<script>
 		function loadScript(src) {
@@ -30,6 +40,10 @@
 <body>
 	
 	<app-main></app-main>
+	
+	<noscript>
+		This website needs javascript to express its functionality.
+	</noscript>
 
 </body>
 </html>

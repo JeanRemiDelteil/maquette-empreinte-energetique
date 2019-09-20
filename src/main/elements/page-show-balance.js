@@ -1,7 +1,10 @@
 import {html, LitElement} from 'lit-element';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
+import '@polymer/iron-icon/iron-icon';
 
+import {textFit} from '../lib/textFit';
+import './icon-set';
 import './highcharts-pie';
 import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
@@ -51,9 +54,10 @@ export class PageShowBalance extends LitElement {
 		return html`
 <style>
 	:host {
+		position: relative;
 		width: 100%;
 		
-		position: relative;
+		background-color: #f1e7e2;
 	}
 	
 	/**<editor-fold desc="style main layout">*/
@@ -91,7 +95,36 @@ export class PageShowBalance extends LitElement {
 		height: 50%;
 	}
 	
-	
+	/**<editor-fold desc="style Slave layout">*/
+	.slave-container {
+		display: flex;
+		align-items: center;
+		
+		color: #434348;
+	}
+	.slave-container > iron-icon {
+		width: 40%;
+		height: 50%;
+	}
+	.slave-words {
+		display: flex;
+		flex-direction: column;
+		width: 60%;
+		height: 50%;
+		
+		box-sizing: content-box;
+		margin-left: 20px;
+	}
+	.slave-words > .slave-number {
+		width: 100%;
+		height: 80%;
+	}
+	.slave-words > div {
+		width: 100%;
+		height: 20%;
+	}
+	/**</editor-fold>*/
+
 </style>
 
 <main>
@@ -111,9 +144,12 @@ export class PageShowBalance extends LitElement {
 		></highcharts-pie>
 		
 		<div class="child-container"></div>
-		<div class="child-container">
-			<span>${this.numberSlaves}</span>
-			<span>ESCLAVES</span>
+		<div class="child-container slave-container">
+			<iron-icon icon="app-icon:slaves"></iron-icon>
+			<div class="slave-words">
+				<div class="slave-number"></div>
+				<div class="slave-text">ESCLAVES</div>
+			</div>
 		</div>
 	</div>
 	
@@ -133,6 +169,16 @@ export class PageShowBalance extends LitElement {
 	
 	//<editor-fold desc="# LitElement lifecycle">
 	
+	firstUpdated(_changedProperties) {
+		this._domSlaveNum = this.shadowRoot.querySelector('.slave-number');
+		this._domSlaveText = this.shadowRoot.querySelector('.slave-text');
+		
+		textFit(this._domSlaveText, {
+			minFontSize: 6,
+			maxFontSize: 300,
+		});
+	}
+	
 	updated(changedProperties) {
 		
 		changedProperties.forEach((oldValue, propName) => {
@@ -142,6 +188,10 @@ export class PageShowBalance extends LitElement {
 					this._updatePie(this._chartMap[PIE_CHART_KW], this.seriesKW.main, {allowPointSelect: true});
 					break;
 				
+				case 'numberSlaves':
+					this._formatSlavesNumber(this.numberSlaves);
+					
+					break;
 			}
 		});
 		
@@ -196,6 +246,9 @@ export class PageShowBalance extends LitElement {
 			dataLabels: {
 				enabled: true,
 				format: `{point.name}: {point.y:,.1f} kWh`,
+				style: {
+					'fontSize': '0.7em',
+				},
 			},
 			tooltip: {
 				enabled: true,
@@ -203,6 +256,19 @@ export class PageShowBalance extends LitElement {
 			},
 			// allowPointSelect: true,
 			...additionalOptions,
+		});
+	}
+	
+	/**
+	 * @param {number} num
+	 * @return {string}
+	 * @private
+	 */
+	_formatSlavesNumber(num) {
+		this._domSlaveNum.innerHTML = num.toLocaleString(undefined, {maximumSignificantDigits: 2});
+		textFit(this._domSlaveNum, {
+			minFontSize: 6,
+			maxFontSize: 300,
 		});
 	}
 }

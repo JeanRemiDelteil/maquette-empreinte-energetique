@@ -70,25 +70,37 @@ export class HighchartsPie extends LitElement {
 						}));
 					},
 				},
+				backgroundColor: 'transparent',
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+			},
+			credits: {
+				enabled: false,
 			},
 			title: {
 				text: this.title,
+				verticalAlign: 'bottom',
+				style: {
+					'fontSize': '1em',
+				},
 			},
 			/*tooltip: {
-				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-			},
-			plotOptions: {
-				pie: {
-					allowPointSelect: true,
-					cursor: 'pointer',
-					dataLabels: {
-						enabled: true,
-						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-						style: {
-							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-						},
-					},
-				},
+			 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+			 },
+			 plotOptions: {
+			 pie: {
+			 allowPointSelect: true,
+			 cursor: 'pointer',
+			 dataLabels: {
+			 enabled: true,
+			 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+			 style: {
+			 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+			 },
+			 },
+			 },
 			 },*/
 		});
 		
@@ -117,6 +129,8 @@ export class HighchartsPie extends LitElement {
 <style>
 	:host {
 		display: flex;
+		
+		font-size: 1.5em;
 	}
 </style>
 
