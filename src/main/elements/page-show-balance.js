@@ -265,7 +265,7 @@ export class PageShowBalance extends LitElement {
 	 * @private
 	 */
 	_formatSlavesNumber(num) {
-		this._domSlaveNum.innerHTML = num.toLocaleString(undefined, {maximumSignificantDigits: 2});
+		this._domSlaveNum.innerHTML = num.toLocaleString(undefined, {maximumFractionDigits: 1});
 		textFit(this._domSlaveNum, {
 			minFontSize: 6,
 			maxFontSize: 300,

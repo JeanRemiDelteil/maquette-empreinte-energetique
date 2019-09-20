@@ -149,6 +149,9 @@ export class PageEditBalance extends LitElement {
 		display: flex;
 		align-items: baseline;
 	}
+	.balance-item-2nd-row {
+		display: flex;
+	}
 	.balance-item-type > paper-icon-button {
 		margin-left: auto;
 		color: var(--app-sub-text-color);
@@ -163,6 +166,8 @@ export class PageEditBalance extends LitElement {
 		justify-content: space-around;
 		/*noinspection CssOverwrittenProperties*/
 		justify-content: space-evenly; /* keep the first for fall back */
+		
+		flex: auto;
 	}
 	.balance-item-coef {
 		margin-left: 1em;
@@ -172,6 +177,10 @@ export class PageEditBalance extends LitElement {
 	}
 	.balance-item-coef-value {
 		text-align: center;
+	}
+	.balance-item-value {
+		margin-left: 1em;
+		min-width: 4em;
 	}
 	/**</editor-fold>*/
 	
@@ -318,15 +327,25 @@ export class PageEditBalance extends LitElement {
 	 * @private
 	 */
 	_render_balanceInputList(list) {
-		return list.map(item => html`
+		return list
+			.map(item => html`
 <paper-card class="balance-item">
 	<div class="balance-item-type">	
 		<span>${this._render_balanceItem_title(item.data)}</span>
 		<paper-icon-button @click="${() => this.deleteBalanceItem(item.id)}" icon="app-icon:delete"></paper-icon-button>
 	</div>
-	<div class="balance-item-coefs">${item.data.coefs.map(coef => this._render_balanceItem_coef(coef))}</div>
+	<div class="balance-item-2nd-row">
+		<div class="balance-item-coefs">
+			${item.data.coefs.map(coef => this._render_balanceItem_coef(coef))}
+		</div>
+		<div class="balance-item-value">
+			<div class="balance-item-coef-title">${'kWh'}</div>
+			<div class="balance-item-coef-value">${item.data.values.kW.toLocaleString(undefined, {maximumFractionDigits: 1})}</div>
+		</div>
+	</div>
 </paper-card>
-`);
+`)
+			.reverse();
 	}
 	
 	/**
