@@ -2,6 +2,7 @@ import {html, LitElement} from 'lit-element';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 
+import './qr-code';
 import {LG_ACTION_FOOTPRINT_EDIT, LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
@@ -63,14 +64,22 @@ export class PageLinkBalance extends LitElement {
 		display: flex;
 		flex-wrap: wrap;
 		
+		align-items: center;
+		justify-content: center;
+		
 		padding: 1em 1em 0.2em;
+	}
+	
+	qr-code {
+		width: 60%;
+		height: 60%;
 	}
 
 </style>
 
 <main>
 	<div class="top-container">
-		
+		<qr-code url="${this._getPageLink(this.id)}"></qr-code>
 	</div>
 	
 	<div class="action-menu">
@@ -89,5 +98,16 @@ export class PageLinkBalance extends LitElement {
 	}
 	
 	//</editor-fold>
+	
+	/**
+	 * @param {string} id
+	 * @return {string}
+	 * @private
+	 */
+	_getPageLink(id) {
+		if (!id) return '';
+		
+		return `${window.location.origin}/empreinte-energie/${this.id}/graphiques`;
+	}
 	
 }
