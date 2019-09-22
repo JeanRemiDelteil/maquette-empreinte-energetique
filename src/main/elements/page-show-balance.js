@@ -139,7 +139,7 @@ export class PageShowBalance extends LitElement {
 		height: 50%;
 		
 		box-sizing: content-box;
-		margin-left: 20px;
+		margin-left: 1em;
 	}
 	.slave-words > .slave-number {
 		width: 100%;

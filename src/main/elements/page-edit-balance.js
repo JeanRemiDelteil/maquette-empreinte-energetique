@@ -79,22 +79,29 @@ export class PageEditBalance extends LitElement {
 	.top-container {
 		flex: auto;
 		display: flex;
+	    justify-content: space-between;
+		
 		overflow: auto;
 	}
 	.child-main {
-		width: 50%;
-		padding: 2em;
-		box-sizing: border-box;
+		width: calc(50% - 0.5em);
+		padding-bottom: 0.2em;
 	}
 	.action-menu {
 		flex-shrink: 0;
 		display: flex;
 		justify-content: space-between;
-		padding: 1em;
+		padding: 0.8em 1em 1em;
 	}
 	.action-menu paper-button:not([disabled]) {
 		background-color: white;
 		color: var(--app-card-text-color);
+	}
+	.action-menu paper-button {
+		margin: 0 0 0 1em;
+	}
+	.action-menu > a:first-child > paper-button {
+		margin: 0;
 	}
 	.action-menu a {
 		text-decoration: none;
@@ -103,6 +110,9 @@ export class PageEditBalance extends LitElement {
 	
 	/**<editor-fold desc="style for input">*/
 	.consumption-input {
+		padding-top: 1em;
+		padding-left: 1em;
+		padding-right: 0.5em;
 		overflow-y: auto;
 	}
 	.consumption-input-btn-add:not([disabled]) {
@@ -134,6 +144,9 @@ export class PageEditBalance extends LitElement {
 	
 	/**<editor-fold desc="style for balance list">*/
 	.consumption-list {
+		padding-top: 1em;
+		padding-left: 0.5em;
+		padding-right: 1em;
 		overflow-y: auto;
 	}
 	.balance-item {
@@ -151,6 +164,9 @@ export class PageEditBalance extends LitElement {
 	}
 	.balance-item-2nd-row {
 		display: flex;
+		overflow: auto;
+		
+		font-size: 0.85em;
 	}
 	.balance-item-type > paper-icon-button {
 		margin-left: auto;
@@ -162,15 +178,12 @@ export class PageEditBalance extends LitElement {
 	.balance-item-coefs {
 		display: flex;
 		flex-direction: row;
-		/*noinspection CssOverwrittenProperties*/
-		justify-content: space-around;
-		/*noinspection CssOverwrittenProperties*/
-		justify-content: space-evenly; /* keep the first for fall back */
 		
 		flex: auto;
 	}
 	.balance-item-coef {
 		margin-left: 1em;
+		width: calc(25% - 1em);
 	}
 	.balance-item-coef-title {
 		color: var(--app-sub-text-color);
@@ -185,13 +198,17 @@ export class PageEditBalance extends LitElement {
 	/**</editor-fold>*/
 	
 	
-	@media screen and (max-width: 999px) {
-		main {
-			flex-direction: column;
+	@media screen and (max-width: 900px) {
+		.top-container {
+			flex-wrap: wrap;
 		}
 		
 		.child-main {
 			width: 100%;
+			padding: 1em;
+		}
+		.consumption-list {
+			padding-bottom: 0.2em;
 		}
 	}
 	
