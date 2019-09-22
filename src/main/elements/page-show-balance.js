@@ -80,11 +80,17 @@ export class PageShowBalance extends LitElement {
 		flex-shrink: 0;
 		display: flex;
 		justify-content: space-between;
-		padding: 1em;
+		padding: 0.8em 1em 1em;
 	}
 	.action-menu paper-button:not([disabled]) {
 		background-color: white;
 		color: var(--app-card-text-color);
+	}
+	.action-menu paper-button {
+		margin: 0 0 0 1em;
+	}
+	.action-menu > a:first-child > paper-button {
+		margin: 0;
 	}
 	.action-menu a {
 		text-decoration: none;
@@ -96,11 +102,23 @@ export class PageShowBalance extends LitElement {
 		display: flex;
 		flex-wrap: wrap;
 		
+        justify-content: space-between;
+        align-content: space-between;
+        
+        padding: 1em 1em 0.2em;
+        
 		overflow: auto;
 	}
 	.child-container {
-		width: 50%;
-		height: 50%;
+		width: calc(50% - 0.5em);
+		height: calc(50% - 0.5em);
+		display: flex;
+		
+		padding: 1em;
+	}
+	.child-container > .slave-container,
+	.child-container > highcharts-chart {
+		width: 100%;
 	}
 	
 	/**<editor-fold desc="style Slave layout">*/
@@ -132,51 +150,75 @@ export class PageShowBalance extends LitElement {
 		height: 20%;
 	}
 	/**</editor-fold>*/
-
+	
+	
+	@media screen and (max-width: 900px) {
+	
+		.top-container {
+			align-content: unset;
+		}
+	
+		.child-container {
+			width: 100%;
+			height: 50%;
+			
+			margin-bottom: 1em;
+		}
+		.child-container:last-child {
+            margin-bottom: 0;
+		}
+	}
+	
+	
 </style>
 
 <main>
 	<div class="top-container">
-		<highcharts-chart
-			id="${PIE_CHART_KW}"
-			class="child-container"
-			title="${LG_KWH_TITLE}"
-			type="pie"
-			@chart-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
-			@chart-drilldown="${this._onMasterDrilldown}"
-		></highcharts-chart>
+		<paper-card class="child-container">
+			<highcharts-chart
+				id="${PIE_CHART_KW}"
+				title="${LG_KWH_TITLE}"
+				type="pie"
+				@chart-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
+				@chart-drilldown="${this._onMasterDrilldown}"
+			></highcharts-chart>
+		</paper-card>
 		
-		<highcharts-chart
-			id="${PIE_CHART_KW_SUB}"
-			class="child-container"
-			title="${LG_KWH_SUB_TITLE(this.detailsKwTitle)}"
-			type="pie"
-			@chart-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
-		></highcharts-chart>
+		<paper-card class="child-container">
+			<highcharts-chart
+				id="${PIE_CHART_KW_SUB}"
+				title="${LG_KWH_SUB_TITLE(this.detailsKwTitle)}"
+				type="pie"
+				@chart-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
+			></highcharts-chart>
+		</paper-card>
 		
-		<highcharts-chart
-			id="${COLUMN_CHART_COMPARE_NATIONAL_MEAN}"
-			class="child-container"
-			title="${LG_NATIONAL_MEAN_TITLE}"
-			type="column"
-			
-			.options="${{
+		<paper-card class="child-container">
+			<highcharts-chart
+				id="${COLUMN_CHART_COMPARE_NATIONAL_MEAN}"
+				title="${LG_NATIONAL_MEAN_TITLE}"
+				type="column"
+				
+				.options="${{
 			legend: {enabled: false},
 			xAxis: {
 				categories: ['Moyenne Française', 'Total empreinte'],
 			},
 		}}"
-			
-			@chart-ready="${() => this._setupColumnChart(COLUMN_CHART_COMPARE_NATIONAL_MEAN, null)}"
-		></highcharts-chart>
+				
+				@chart-ready="${() => this._setupColumnChart(COLUMN_CHART_COMPARE_NATIONAL_MEAN, null)}"
+			></highcharts-chart>
+		</paper-card>
 		
-		<div class="child-container slave-container">
-			<iron-icon icon="app-icon:slaves"></iron-icon>
-			<div class="slave-words">
-				<div class="slave-number"></div>
-				<div class="slave-text">${LG_GRAPH_SLAVES}</div>
+		<paper-card class="child-container">
+			<div class="slave-container">
+				<iron-icon icon="app-icon:slaves"></iron-icon>
+				<div class="slave-words">
+					<div class="slave-number"></div>
+					<div class="slave-text">${LG_GRAPH_SLAVES}</div>
+				</div>
 			</div>
-		</div>
+		</paper-card>
 	</div>
 	
 	<div class="action-menu">
