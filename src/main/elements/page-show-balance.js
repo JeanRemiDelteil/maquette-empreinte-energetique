@@ -8,8 +8,18 @@ import 'highcharts/es-modules/parts/ColumnSeries';
 
 import {textFit} from '../lib/textFit';
 import './icon-set';
-import './highcharts-chart';
-import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT, LG_GRAPH_SLAVES, LG_KWH_SUB_TITLE, LG_KWH_TITLE, LG_NATIONAL_MEAN_TITLE} from '../lang/lang-fr';
+import {Highcharts} from './highcharts-chart';
+import {
+	LG_ACTION_FOOTPRINT_EDIT,
+	LG_CREATE_NEW_E_FOOTPRINT,
+	LG_GRAPH_COLUMN_CURRENT_FOOTPRINT,
+	LG_GRAPH_COLUMN_NATIONAL_MEAN,
+	LG_GRAPH_SLAVES,
+	LG_KWH_SUB_TITLE,
+	LG_KWH_TITLE,
+	LG_NATIONAL_MEAN_TITLE,
+	LG_NO_DATA,
+} from '../lang/lang-fr';
 
 
 const PIE_CHART_KW = 'pieChart-kW';
@@ -53,6 +63,12 @@ export class PageShowBalance extends LitElement {
 			[PIE_CHART_KW]: null,
 			[PIE_CHART_KW_SUB]: null,
 		};
+		
+		Highcharts.setOptions({
+			lang: {
+				noData: LG_NO_DATA,
+			},
+		});
 	}
 	
 	//<editor-fold desc="# Renderers">
@@ -120,6 +136,9 @@ export class PageShowBalance extends LitElement {
 	.child-container > highcharts-chart {
 		width: 100%;
 	}
+	highcharts-chart {
+		font-size: 1.2em;
+	}
 	
 	/**<editor-fold desc="style Slave layout">*/
 	.slave-container {
@@ -179,6 +198,22 @@ export class PageShowBalance extends LitElement {
 				id="${PIE_CHART_KW}"
 				title="${LG_KWH_TITLE}"
 				type="pie"
+				
+				.options="${{
+			chart: {
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+			},
+			title: {
+				verticalAlign: 'bottom',
+				style: {
+					'fontSize': '1em',
+				},
+			},
+		}}"
+				
 				@chart-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
 				@chart-drilldown="${this._onMasterDrilldown}"
 			></highcharts-chart>
@@ -189,6 +224,22 @@ export class PageShowBalance extends LitElement {
 				id="${PIE_CHART_KW_SUB}"
 				title="${LG_KWH_SUB_TITLE(this.detailsKwTitle)}"
 				type="pie"
+				
+				.options="${{
+			chart: {
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+			},
+			title: {
+				verticalAlign: 'bottom',
+				style: {
+					'fontSize': '1em',
+				},
+			},
+		}}"
+				
 				@chart-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
 			></highcharts-chart>
 		</paper-card>
@@ -200,9 +251,32 @@ export class PageShowBalance extends LitElement {
 				type="column"
 				
 				.options="${{
+			chart: {
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+			},
 			legend: {enabled: false},
+			title: {
+				verticalAlign: 'bottom',
+				style: {
+					'fontSize': '1em',
+				},
+			},
 			xAxis: {
-				categories: ['Moyenne Française', 'Total empreinte'],
+				categories: [LG_GRAPH_COLUMN_NATIONAL_MEAN, LG_GRAPH_COLUMN_CURRENT_FOOTPRINT],
+				labels: {
+					style: {
+						'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+						'fontSize': '0.8em',
+					},
+				},
+			},
+			yAxis: {
+				title: {
+					enabled: false,
+				},
 			},
 		}}"
 				
@@ -249,7 +323,7 @@ export class PageShowBalance extends LitElement {
 		// listen to global app resize event
 		window.addEventListener('app-resize', () => this._onResize());
 	}
-		
+	
 	
 	updated(changedProperties) {
 		
@@ -327,7 +401,7 @@ export class PageShowBalance extends LitElement {
 		
 		columnChart.chart.addSeries({
 			type: 'column',
-			name: 'Consommation (kWh)',
+			name: '',
 			colorByPoint: true,
 			data: data,
 			animation: {
@@ -335,14 +409,14 @@ export class PageShowBalance extends LitElement {
 			},
 			dataLabels: {
 				enabled: true,
-				format: `{point.name}: {point.y:,.1f} kWh`,
+				format: `{point.y:,.1f} kWh`,
 				style: {
 					'fontSize': '0.7em',
 				},
 			},
 			tooltip: {
 				enabled: true,
-				pointFormat: `{point.name}: {point.y:,.1f} kWh`,
+				pointFormat: `{point.y:,.1f} kWh`,
 			},
 			...additionalOptions,
 		});
@@ -372,7 +446,7 @@ export class PageShowBalance extends LitElement {
 			},
 			tooltip: {
 				enabled: true,
-				pointFormat: `{point.name}: {point.y:,.1f} kWh`,
+				pointFormat: `{point.y:,.1f} kWh`,
 			},
 			// allowPointSelect: true,
 			...additionalOptions,

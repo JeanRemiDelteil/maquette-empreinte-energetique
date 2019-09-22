@@ -20,6 +20,7 @@ import 'highcharts/es-modules/modules/overlapping-datalabels.src';
 import 'highcharts/es-modules/parts/Interaction';
 import 'highcharts/es-modules/parts/Responsive';
 import 'highcharts/es-modules/modules/drilldown.src';
+import 'highcharts/es-modules/modules/no-data-to-display.src';
 
 
 export const Highcharts = HighchartsLib;
@@ -56,15 +57,8 @@ export class HighchartsChart extends LitElement {
 		this._chart = Highcharts.chart(this._chartRoot, {
 			...this.options,
 			chart: {
-				plotBackgroundColor: null,
-				plotBorderWidth: null,
-				plotShadow: false,
 				type: this.type,
 				backgroundColor: 'transparent',
-				style: {
-					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
-					'fontSize': '1em',
-				},
 				
 				...(this.options.chart || {}),
 				
@@ -94,11 +88,6 @@ export class HighchartsChart extends LitElement {
 			},
 			title: {
 				text: this.title,
-				verticalAlign: 'bottom',
-				style: {
-					'fontSize': '1em',
-				},
-				
 				...(this.options.title || {}),
 			},
 		});
@@ -130,8 +119,6 @@ export class HighchartsChart extends LitElement {
 <style>
 	:host {
 		display: flex;
-		
-		font-size: 1.5em;
 	}
 </style>
 
