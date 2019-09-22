@@ -203,7 +203,11 @@ export class PageShowBalance extends LitElement {
 			minFontSize: 6,
 			maxFontSize: 300,
 		});
+		
+		// listen to global app resize event
+		window.addEventListener('app-resize', () => this._onResize());
 	}
+		
 	
 	updated(changedProperties) {
 		
@@ -254,7 +258,7 @@ export class PageShowBalance extends LitElement {
 		const subSeries = event.detail.point.options.drilldown;
 		const drilldownSeries = this.seriesKW.drilldown.index[subSeries];
 		
-		this.detailsKwTitle = `Détails des consommations "${subSeries}" en kWh`;
+		this.detailsKwTitle = subSeries;
 		
 		const series = drilldownSeries && drilldownSeries.data || null;
 		
@@ -359,5 +363,16 @@ export class PageShowBalance extends LitElement {
 				'y': this.totalConsumption,
 			},
 		];
+	}
+	
+	_onResize() {
+		textFit(this._domSlaveNum, {
+			minFontSize: 6,
+			maxFontSize: 300,
+		});
+		textFit(this._domSlaveText, {
+			minFontSize: 6,
+			maxFontSize: 300,
+		});
 	}
 }

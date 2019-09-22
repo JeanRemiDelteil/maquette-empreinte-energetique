@@ -53,8 +53,6 @@ export class HighchartsChart extends LitElement {
 	firstUpdated(_changedProperties) {
 		this._chartRoot = this.shadowRoot.querySelector('#chartRoot');
 		
-		console.log(this.options);
-		
 		this._chart = Highcharts.chart(this._chartRoot, {
 			...this.options,
 			chart: {

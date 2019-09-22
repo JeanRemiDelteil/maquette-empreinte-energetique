@@ -4,6 +4,7 @@ import {installRouter} from 'pwa-helpers/router';
 import {navigateTo} from '../store/reducers/router/actions';
 import {getLocationPath} from '../store/reducers/router/selectors';
 import {Router} from '../lib/router/Router';
+import ResizeSensor from '../lib/ResizeSensor';
 
 
 const router = new Router([
@@ -105,6 +106,18 @@ export class AppMain extends connect(LitElement) {
 	
 	//</editor-fold>
 	
+	//<editor-fold desc="# LitElement lifecycle">
+	
+	firstUpdated(_changedProperties) {
+		this._domMain = this.shadowRoot.querySelector('main');
+		
+		// Setup Resize event
+		this._sensor = new ResizeSensor(this._domMain, this._onResize);
+	}
+	
+	//</editor-fold>
+	
+	
 	//<editor-fold desc="# Redux callback">
 	
 	// noinspection JSUnusedGlobalSymbols
@@ -113,5 +126,13 @@ export class AppMain extends connect(LitElement) {
 	}
 	
 	//</editor-fold>
+	
+	
+	_onResize() {
+		window.dispatchEvent(new CustomEvent('app-resize', {
+			bubbles: true,
+			composed: true,
+		}));
+	}
 	
 }
