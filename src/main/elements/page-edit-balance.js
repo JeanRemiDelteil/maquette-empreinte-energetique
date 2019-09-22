@@ -233,7 +233,7 @@ export class PageEditBalance extends LitElement {
 			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
 		</a>
 		<a class="btn-show-stats" href="/empreinte-energie/${this.id}/graphiques">
-			<paper-button raised ?disabled="${!this._isStatAvailable(this.inputsList)}">${LG_ACTION_STATISTICS}</paper-button>
+			<paper-button raised>${LG_ACTION_STATISTICS}</paper-button>
 		</a>
 	</div>
 </main>
@@ -432,16 +432,6 @@ export class PageEditBalance extends LitElement {
 		return this._selectedCoefs
 		       && this._selectedCoefs.coefs
 			       .every(coef => coefs.has(coef));
-	}
-	
-	/**
-	 * @param {Array<IS_EBalance_Input>} inputList
-	 *
-	 * @return {boolean}
-	 * @private
-	 */
-	_isStatAvailable(inputList) {
-		return !!inputList.length;
 	}
 	
 	_addSelection() {

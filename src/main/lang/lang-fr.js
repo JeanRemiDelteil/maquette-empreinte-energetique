@@ -2,7 +2,8 @@ export const LG_NEW_E_FOOTPRINT = 'Nouvelle empreinte énergétique';
 export const LG_CREATE_NEW_E_FOOTPRINT = 'Nouvelle Empreinte';
 export const LG_START = 'Démarrer';
 export const LG_ACTION_STATISTICS = 'Statistiques';
-export const LG_ACTION_FOOTPRINT_EDIT = 'Modifier l\'empreinte';
+export const LG_ACTION_FOOTPRINT_EDIT = "Modifier l'empreinte";
+export const LG_ACTION_FOOTPRINT_LINK = "Lien";
 
 /* 404 */
 export const LG_NOTHING_HERE = "Il n'y a rien ici !";
