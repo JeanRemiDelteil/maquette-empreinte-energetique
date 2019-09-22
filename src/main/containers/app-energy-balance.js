@@ -10,6 +10,20 @@ import {getBalance, getBalanceId} from '../store/reducers/energyBalance/selector
 // Define Router only once (not on every element creation)
 const router = new Router([
 	{
+		name: 'Link',
+		pattern: /^\/empreinte-energie\/([^/]+)\/lien$/,
+		
+		load: (route, path) => {
+			const [, id] = route.pattern.exec(path) || [];
+			id
+			&& id !== getBalanceId(getBalance(store.getState()))
+			&& store.dispatch(loadBalance(id));
+			
+			return html`<app-link-balance></app-link-balance>`;
+		},
+		importLazy: () => import('../containers/app-link-balance'),
+	},
+	{
 		name: 'Edit',
 		pattern: /^\/empreinte-energie\/([^/]+)\/modifier$/,
 		

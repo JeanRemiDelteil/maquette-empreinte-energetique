@@ -11,6 +11,7 @@ import './icon-set';
 import {Highcharts} from './highcharts-chart';
 import {
 	LG_ACTION_FOOTPRINT_EDIT,
+	LG_ACTION_FOOTPRINT_LINK,
 	LG_CREATE_NEW_E_FOOTPRINT,
 	LG_GRAPH_COLUMN_CURRENT_FOOTPRINT,
 	LG_GRAPH_COLUMN_NATIONAL_MEAN,
@@ -80,8 +81,6 @@ export class PageShowBalance extends LitElement {
 	:host {
 		position: relative;
 		width: 100%;
-		
-		background-color: #f1e7e2;
 	}
 	
 	/**<editor-fold desc="style main layout">*/
@@ -301,6 +300,9 @@ export class PageShowBalance extends LitElement {
 		</a>
 		<a class="btn-show-edit" href="/empreinte-energie/${this.id}/modifier">
 			<paper-button raised>${LG_ACTION_FOOTPRINT_EDIT}</paper-button>
+		</a>
+		<a class="btn-show-link" href="/empreinte-energie/${this.id}/lien">
+			<paper-button raised>${LG_ACTION_FOOTPRINT_LINK}</paper-button>
 		</a>
 	</div>
 </main>

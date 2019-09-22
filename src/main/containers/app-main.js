@@ -88,7 +88,7 @@ export class AppMain extends connect(LitElement) {
 		--app-card-color: white;
 		--app-card-text-color: #424242;
 		--app-sub-text-color: #c7c7c7;
-		--app-background-color: #c7c7c7;
+		--app-background-color: #f1e7e2;
 		
 		background-color: var(--app-background-color);
 	}
