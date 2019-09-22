@@ -1,5 +1,7 @@
 import {html, LitElement} from 'lit-element';
-import './highcharts-pie';
+import 'highcharts/es-modules/parts/PieSeries';
+
+import './highcharts-chart';
 import {dataConverter} from '../lib/dataConverter';
 
 
@@ -45,12 +47,13 @@ export class PageEReport extends LitElement {
 	<button @click="${this._onLight}">Light the bulb</button>
 	
 	<div>
-		<highcharts-pie
+		<highcharts-chart
 			id="pieChart"
 			title="Actions"
+			type="pie"
 			
-			@pie-ready="${this._onPieLoad}"
-		></highcharts-pie>
+			@chart-ready="${this._onPieLoad}"
+		></highcharts-chart>
 	</div>
 	
 	<div>Actions</div>

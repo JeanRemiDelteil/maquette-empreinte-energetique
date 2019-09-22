@@ -5,6 +5,7 @@ import {getDrilldownData, processAggregates} from '../lib/dataConverter';
 
 // Source: https://jancovici.com/transition-energetique/l-energie-et-nous/combien-suis-je-un-esclavagiste/
 const COEF_SLAVES = 1919;
+const NATIONAL_MEAN = 8100;
 
 export class AppShowBalance extends connect(PageShowBalance) {
 	
@@ -35,6 +36,9 @@ export class AppShowBalance extends connect(PageShowBalance) {
 		this.seriesKW = this.series.kW;
 		
 		this.numberSlaves = this.aggregates.values.kW / COEF_SLAVES;
+		
+		this.totalConsumption = this.aggregates.values.kW;
+		this.consumptionNationalMean = NATIONAL_MEAN;
 		
 		// no CO2 for now
 	}

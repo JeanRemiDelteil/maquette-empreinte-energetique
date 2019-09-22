@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import Highcharts from 'highcharts/es-modules/parts/Globals';
+import HighchartsLib from 'highcharts/es-modules/parts/Globals';
 import 'highcharts/es-modules/parts/SvgRenderer';
 import 'highcharts/es-modules/parts/Html';
 import 'highcharts/es-modules/parts/Axis';
@@ -15,7 +15,6 @@ import 'highcharts/es-modules/parts/Chart';
 import 'highcharts/es-modules/parts/ScrollablePlotArea';
 import 'highcharts/es-modules/parts/Stacking';
 import 'highcharts/es-modules/parts/Dynamics';
-import 'highcharts/es-modules/parts/PieSeries';
 import 'highcharts/es-modules/parts/DataLabels';
 import 'highcharts/es-modules/modules/overlapping-datalabels.src';
 import 'highcharts/es-modules/parts/Interaction';
@@ -23,16 +22,20 @@ import 'highcharts/es-modules/parts/Responsive';
 import 'highcharts/es-modules/modules/drilldown.src';
 
 
-export class HighchartsPie extends LitElement {
+export const Highcharts = HighchartsLib;
+
+export class HighchartsChart extends LitElement {
 	
 	static get is() {
-		return 'highcharts-pie';
+		return 'highcharts-chart';
 	}
 	
 	// noinspection JSUnusedGlobalSymbols
 	static get properties() {
 		return {
 			title: {type: String},
+			type: {type: String},
+			options: {type: Object},
 		};
 	}
 	
@@ -42,18 +45,31 @@ export class HighchartsPie extends LitElement {
 		
 		this._chart = undefined;
 		
+		this.options = {};
 		this.title = '';
+		this.type = '';
 	}
 	
 	firstUpdated(_changedProperties) {
 		this._chartRoot = this.shadowRoot.querySelector('#chartRoot');
 		
+		console.log(this.options);
+		
 		this._chart = Highcharts.chart(this._chartRoot, {
+			...this.options,
 			chart: {
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
-				type: 'pie',
+				type: this.type,
+				backgroundColor: 'transparent',
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+				
+				...(this.options.chart || {}),
+				
 				events: {
 					drilldown: (event) => {
 						this.dispatchEvent(new CustomEvent('chart-drilldown', {
@@ -69,15 +85,14 @@ export class HighchartsPie extends LitElement {
 							detail: event,
 						}));
 					},
-				},
-				backgroundColor: 'transparent',
-				style: {
-					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
-					'fontSize': '1em',
+					
+					...((this.options.chart || {}).events || {}),
 				},
 			},
 			credits: {
 				enabled: false,
+				
+				...(this.options.credits || {}),
 			},
 			title: {
 				text: this.title,
@@ -85,32 +100,20 @@ export class HighchartsPie extends LitElement {
 				style: {
 					'fontSize': '1em',
 				},
+				
+				...(this.options.title || {}),
 			},
-			/*tooltip: {
-			 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-			 },
-			 plotOptions: {
-			 pie: {
-			 allowPointSelect: true,
-			 cursor: 'pointer',
-			 dataLabels: {
-			 enabled: true,
-			 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-			 style: {
-			 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-			 },
-			 },
-			 },
-			 },*/
 		});
 		
-		this.dispatchEvent(new CustomEvent('pie-ready', {
+		this.dispatchEvent(new CustomEvent('chart-ready', {
 			composed: true,
 			bubbles: true,
 		}));
 	}
 	
 	updated(changedProperties) {
+		// if (!this._chart) return;
+		
 		changedProperties.forEach((oldValue, propName) => {
 			switch (propName) {
 				case 'title':
@@ -147,4 +150,4 @@ export class HighchartsPie extends LitElement {
 }
 
 
-customElements.define('highcharts-pie', HighchartsPie);
+customElements.define(HighchartsChart.is, HighchartsChart);

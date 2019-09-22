@@ -3,14 +3,18 @@ import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 import '@polymer/iron-icon/iron-icon';
 
+import 'highcharts/es-modules/parts/PieSeries';
+import 'highcharts/es-modules/parts/ColumnSeries';
+
 import {textFit} from '../lib/textFit';
 import './icon-set';
-import './highcharts-pie';
-import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
+import './highcharts-chart';
+import {LG_ACTION_FOOTPRINT_EDIT, LG_CREATE_NEW_E_FOOTPRINT, LG_GRAPH_SLAVES, LG_KWH_SUB_TITLE, LG_KWH_TITLE, LG_NATIONAL_MEAN_TITLE} from '../lang/lang-fr';
 
 
 const PIE_CHART_KW = 'pieChart-kW';
 const PIE_CHART_KW_SUB = 'pieChart-kW-sub';
+const COLUMN_CHART_COMPARE_NATIONAL_MEAN = 'COLUMN_CHART_COMPARE_NATIONAL_MEAN';
 
 
 export class PageShowBalance extends LitElement {
@@ -26,6 +30,8 @@ export class PageShowBalance extends LitElement {
 			seriesKW: {type: Object},
 			detailsKwTitle: {type: String},
 			numberSlaves: {type: Number},
+			totalConsumption: {type: Number},
+			ConsumptionNationalMean: {type: Number},
 		};
 	}
 	
@@ -35,8 +41,10 @@ export class PageShowBalance extends LitElement {
 		this.id = '';
 		
 		this.seriesKW = null;
-		this.detailsKwTitle = 'Détails des consommations en kWh';
+		this.detailsKwTitle = '';
 		this.numberSlaves = 0;
+		this.totalConsumption = 0;
+		this.consumptionNationalMean = 0;
 		
 		/**
 		 * @type {Object<string, Highcharts.Chart>}
@@ -129,26 +137,44 @@ export class PageShowBalance extends LitElement {
 
 <main>
 	<div class="top-container">
-		<highcharts-pie
+		<highcharts-chart
 			id="${PIE_CHART_KW}"
 			class="child-container"
-			title="Consommations en kWh"
-			@pie-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
+			title="${LG_KWH_TITLE}"
+			type="pie"
+			@chart-ready="${() => this._setupPieChart(PIE_CHART_KW, this.seriesKW, {allowPointSelect: true})}"
 			@chart-drilldown="${this._onMasterDrilldown}"
-		></highcharts-pie>
-		<highcharts-pie
+		></highcharts-chart>
+		
+		<highcharts-chart
 			id="${PIE_CHART_KW_SUB}"
 			class="child-container"
-			title="${this.detailsKwTitle}"
-			@pie-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
-		></highcharts-pie>
+			title="${LG_KWH_SUB_TITLE(this.detailsKwTitle)}"
+			type="pie"
+			@chart-ready="${() => this._setupPieChart(PIE_CHART_KW_SUB, null)}"
+		></highcharts-chart>
 		
-		<div class="child-container"></div>
+		<highcharts-chart
+			id="${COLUMN_CHART_COMPARE_NATIONAL_MEAN}"
+			class="child-container"
+			title="${LG_NATIONAL_MEAN_TITLE}"
+			type="column"
+			
+			.options="${{
+			legend: {enabled: false},
+			xAxis: {
+				categories: ['Moyenne Française', 'Total empreinte'],
+			},
+		}}"
+			
+			@chart-ready="${() => this._setupColumnChart(COLUMN_CHART_COMPARE_NATIONAL_MEAN, null)}"
+		></highcharts-chart>
+		
 		<div class="child-container slave-container">
 			<iron-icon icon="app-icon:slaves"></iron-icon>
 			<div class="slave-words">
 				<div class="slave-number"></div>
-				<div class="slave-text">ESCLAVES</div>
+				<div class="slave-text">${LG_GRAPH_SLAVES}</div>
 			</div>
 		</div>
 	</div>
@@ -192,6 +218,14 @@ export class PageShowBalance extends LitElement {
 					this._formatSlavesNumber(this.numberSlaves);
 					
 					break;
+				
+				case 'consumptionNationalMean':
+				case 'totalConsumption':
+					if (!this.consumptionNationalMean || !this.totalConsumption) break;
+					
+					this._updateColumn(this._chartMap[COLUMN_CHART_COMPARE_NATIONAL_MEAN], this._buildColumnConsumptionSeries());
+					
+					break;
 			}
 		});
 		
@@ -227,6 +261,46 @@ export class PageShowBalance extends LitElement {
 		this._updatePie(this._chartMap[PIE_CHART_KW_SUB], series);
 	}
 	
+	/**
+	 * @param {string} elemId
+	 * @param series
+	 * @param {{}} additionalOptions
+	 * @private
+	 */
+	_setupColumnChart(elemId, series, additionalOptions = {}) {
+		let columnChart = this._chartMap[elemId] = this.shadowRoot.querySelector('#' + elemId);
+		
+		this._updateColumn(columnChart, this._buildColumnConsumptionSeries(), additionalOptions);
+	}
+	
+	_updateColumn(columnChart, data, additionalOptions) {
+		if (!columnChart || !columnChart.chart) return;
+		
+		// Clear chart
+		columnChart.chart.series.forEach(series => series.remove());
+		
+		columnChart.chart.addSeries({
+			type: 'column',
+			name: 'Consommation (kWh)',
+			colorByPoint: true,
+			data: data,
+			animation: {
+				duration: 0,
+			},
+			dataLabels: {
+				enabled: true,
+				format: `{point.name}: {point.y:,.1f} kWh`,
+				style: {
+					'fontSize': '0.7em',
+				},
+			},
+			tooltip: {
+				enabled: true,
+				pointFormat: `{point.name}: {point.y:,.1f} kWh`,
+			},
+			...additionalOptions,
+		});
+	}
 	
 	_updatePie(pieChart, data, additionalOptions) {
 		if (!pieChart || !pieChart.chart) return;
@@ -270,5 +344,20 @@ export class PageShowBalance extends LitElement {
 			minFontSize: 6,
 			maxFontSize: 300,
 		});
+	}
+	
+	_buildColumnConsumptionSeries() {
+		if (!this.consumptionNationalMean || !this.totalConsumption) return null;
+		
+		return [
+			{
+				'name': 'Moyenne Française',
+				'y': this.consumptionNationalMean,
+			},
+			{
+				'name': 'Empreinte',
+				'y': this.totalConsumption,
+			},
+		];
 	}
 }
