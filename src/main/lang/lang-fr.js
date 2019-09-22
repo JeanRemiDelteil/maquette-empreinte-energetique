@@ -4,6 +4,10 @@ export const LG_START = 'Démarrer';
 export const LG_ACTION_STATISTICS = 'Statistiques';
 export const LG_ACTION_FOOTPRINT_EDIT = 'Modifier l\'empreinte';
 
+/* 404 */
+export const LG_NOTHING_HERE = "Il n'y a rien ici !";
+export const LG_RETURN_HOME = "Retourner en terrain connu ?";
+
 /* Show balance */
 export const LG_KWH_TITLE = 'Consommations en kWh';
 export const LG_KWH_SUB_TITLE = (category) => `Détails: ${category ? `"${category}" ` : ''}en kWh`;

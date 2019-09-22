@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import {connect} from '../store/store';
+import {connect, store} from '../store/store';
 import {installRouter} from 'pwa-helpers/router';
 import {navigateTo} from '../store/reducers/router/actions';
 import {getLocationPath} from '../store/reducers/router/selectors';
@@ -16,17 +16,19 @@ const router = new Router([
 		importLazy: () => import('../containers/app-energy-balance'),
 	},
 	{
-		name: 'test-graph',
-		pattern: /^\/test-graph(\/.*)?$/,
-		
-		load: () => html`<app-e-report></app-e-report>`,
-		importLazy: () => import('../containers/app-e-report'),
-	},
-	{
 		name: 'Home',
 		pattern: /^\/$/,
 		
-		load: () => html`<page-home></page-home>`,
+		load: () => {
+			// Auto forward to creation page for now
+			Promise.resolve()
+				.then(() => {
+					window.history.replaceState({}, '', `/empreinte-energie/`);
+					store.dispatch(navigateTo(window.location));
+				});
+			
+			return html`<page-home></page-home>`;
+		},
 		importLazy: () => import('../elements/page-home'),
 	},
 	{

@@ -1,22 +1,4 @@
-import {
-	EB_ADD_ACTION,
-	EB_BALANCE_INPUT_ADD,
-	EB_BALANCE_INPUT_ADD_WITH_ID,
-	EB_BALANCE_INPUT_DELETE,
-	EB_CREATE,
-	EB_LOAD_BALANCE,
-	EB_LOAD_BALANCE_FAILURE,
-	EB_LOAD_BALANCE_SUCCESS,
-} from './types';
-
-
-/**
- * @param {string} action
- */
-export const addAction = (action) => ({
-	type: EB_ADD_ACTION,
-	payload: {...action},
-});
+import {EB_BALANCE_INPUT_ADD, EB_BALANCE_INPUT_ADD_WITH_ID, EB_BALANCE_INPUT_DELETE, EB_CREATE, EB_LOAD_BALANCE, EB_LOAD_BALANCE_FAILURE, EB_LOAD_BALANCE_SUCCESS} from './types';
 
 
 export const create = () => ({

@@ -1,4 +1,5 @@
 import {html, LitElement} from 'lit-element';
+import {LG_NOTHING_HERE, LG_RETURN_HOME} from '../lang/lang-fr';
 
 
 export class Page404 extends LitElement {
@@ -9,8 +10,18 @@ export class Page404 extends LitElement {
 	
 	render() {
 		return html`
+<style>
+	:host {
+		display: flex;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+
 <div>
-	404 not found ! <a href="/">Go home ?</a>
+	<div>${LG_NOTHING_HERE}</div>
+	<a href="/">${LG_RETURN_HOME}</a>
 </div>`;
 	}
 	

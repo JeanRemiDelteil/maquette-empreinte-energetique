@@ -1,4 +1,5 @@
 import {html, LitElement} from 'lit-element';
+import {LG_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
 export class PageHome extends LitElement {
@@ -24,10 +25,7 @@ export class PageHome extends LitElement {
 	<h1>HOME</h1>
 	
 	<div>
-		<a href="/empreinte-energie">Nouvelle empreinte énergétique</a>
-	</div>
-	<div>
-		<a href="/test-graph">Test Graph</a>
+		<a href="/empreinte-energie">${LG_NEW_E_FOOTPRINT}</a>
 	</div>
 </div>`;
 	}

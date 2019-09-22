@@ -1,4 +1,3 @@
-export const EB_ADD_ACTION = 'EB_ADD_ACTION';
 export const EB_CREATE = 'EB_CREATE';
 
 export const EB_LOAD_BALANCE = 'EB_LOAD_BALANCE';
