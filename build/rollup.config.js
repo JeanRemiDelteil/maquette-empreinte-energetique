@@ -55,10 +55,10 @@ async function getRollUpConfig() {
 					'src/main/config.json': JSON.stringify(srcConfig),
 				}),
 				
-				...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
-				
 				// Resolve commonJS modules
 				commonjs(),
+				...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
+				
 				
 				jsonPlugin({
 					exclude: ['node_modules/**'],
