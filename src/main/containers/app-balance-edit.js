@@ -4,6 +4,7 @@ import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/ener
 import {balance_addInput, balance_deleteRef} from '../store/reducers/energyBalance/actions';
 import {baseDataLoad} from '../store/reducers/baseData/actions';
 import {selectBaseData} from '../store/reducers/baseData/selectors';
+import {getSeriesData, processAggregates} from '../lib/dataConverter';
 
 let baseDataLoaded = false;
 
@@ -32,6 +33,12 @@ export class AppBalanceEdit extends connect(PageBalanceEdit) {
 		baseDataLoaded = !!this.baseData;
 		
 		this.inputsList = getBalanceInputs(this.balance);
+		
+		// compute kWh
+		const aggregates = processAggregates(this.inputsList, [/*'activity',*/ 'category', 'subCategory']);
+		const series = getSeriesData(aggregates, [], {useDrillDown: false});
+		
+		this.seriesKWH = series.kW.main;
 	}
 	
 	//</editor-fold>

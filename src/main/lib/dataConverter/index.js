@@ -148,8 +148,9 @@ export function processAggregates(inputs, aggregateBy) {
 /**
  * @param {IP_Aggregates} aggregates
  * @param {Array<string>} path
+ * @param {boolean} drillDown
  */
-export function getDrilldownData(aggregates, path) {
+export function getSeriesData(aggregates, path, {useDrillDown = true} = {}) {
 	let startAggregate = aggregates;
 	
 	// Find series by path
@@ -189,46 +190,66 @@ export function getDrilldownData(aggregates, path) {
 		return arr;
 	}
 	
+	if (useDrillDown) {
+		startAggregate.items.forEach((category, key) => {
+			output.kW.push({
+				name: key,
+				drilldown: key,
+				y: category.values.kW,
+			});
+			output.CO2.push({
+				name: key,
+				drilldown: key,
+				y: category.values.CO2,
+			});
+			
+			drilldown.kW.push(drilldown.indexKW[key] = {
+				name: key,
+				id: key,
+				data: getDrillDownValue(category.items, 'kW'),
+			});
+			drilldown.CO2.push(drilldown.indexCO2[key] = {
+				name: key,
+				id: key,
+				data: getDrillDownValue(category.items, 'CO2'),
+			});
+		});
+		
+		return {
+			kW: {
+				main: output.kW,
+				drilldown: {
+					series: drilldown.kW,
+					index: drilldown.indexKW,
+				},
+			},
+			CO2: {
+				main: output.CO2,
+				drilldown: {
+					series: drilldown.CO2,
+					index: drilldown.indexCO2,
+				},
+			},
+		};
+	}
+	
 	startAggregate.items.forEach((category, key) => {
 		output.kW.push({
 			name: key,
-			drilldown: key,
 			y: category.values.kW,
 		});
 		output.CO2.push({
 			name: key,
-			drilldown: key,
 			y: category.values.CO2,
-		});
-		
-		drilldown.kW.push(drilldown.indexKW[key] = {
-			name: key,
-			id: key,
-			data: getDrillDownValue(category.items, 'kW'),
-		});
-		drilldown.CO2.push(drilldown.indexCO2[key] = {
-			name: key,
-			id: key,
-			data: getDrillDownValue(category.items, 'CO2'),
 		});
 	});
 	
 	return {
 		kW: {
 			main: output.kW,
-			drilldown: {
-				series: drilldown.kW,
-				index: drilldown.indexKW,
-			},
 		},
 		CO2: {
 			main: output.CO2,
-			drilldown: {
-				series: drilldown.CO2,
-				index: drilldown.indexCO2,
-			},
 		},
 	};
 }
-
-window['getDrilldownData'] = getDrilldownData;

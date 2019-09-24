@@ -1,7 +1,7 @@
 import {PageBalanceShow} from '../elements/page-balance-show';
 import {connect} from '../store/store';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
-import {getDrilldownData, processAggregates} from '../lib/dataConverter';
+import {getSeriesData, processAggregates} from '../lib/dataConverter';
 
 // Source: https://jancovici.com/transition-energetique/l-energie-et-nous/combien-suis-je-un-esclavagiste/
 const COEF_SLAVES = 1919;
@@ -30,17 +30,17 @@ export class AppBalanceShow extends connect(PageBalanceShow) {
 		this.id = getBalanceId(this.balance);
 		this.inputsList = getBalanceInputs(this.balance);
 		
-		this.aggregates = processAggregates(this.inputsList, [/*'activity',*/ 'category', 'subCategory']);
-		this.series = getDrilldownData(this.aggregates, []);
-		
-		this.seriesKW = this.series.kW;
-		
-		this.numberSlaves = this.aggregates.values.kW / COEF_SLAVES;
-		
-		this.totalConsumption = this.aggregates.values.kW;
-		this.consumptionNationalMean = NATIONAL_MEAN;
+		const aggregates = processAggregates(this.inputsList, [/*'activity',*/ 'category', 'subCategory']);
+		const series = getSeriesData(aggregates, []);
 		
 		// no CO2 for now
+		this.seriesKW = series.kW;
+		
+		this.numberSlaves = aggregates.values.kW / COEF_SLAVES;
+		
+		this.totalConsumption = aggregates.values.kW;
+		this.consumptionNationalMean = NATIONAL_MEAN;
+		
 	}
 	
 	//</editor-fold>

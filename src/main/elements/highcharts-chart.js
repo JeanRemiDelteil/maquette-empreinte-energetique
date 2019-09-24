@@ -95,6 +95,7 @@ export class HighchartsChart extends LitElement {
 		this.dispatchEvent(new CustomEvent('chart-ready', {
 			composed: true,
 			bubbles: true,
+			detail: this,
 		}));
 	}
 	

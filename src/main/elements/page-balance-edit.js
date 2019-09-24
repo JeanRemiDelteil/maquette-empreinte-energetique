@@ -3,9 +3,11 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 
+import 'highcharts/es-modules/parts/PieSeries';
+import './highcharts-chart';
 import './icon-set';
 import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
-import {LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
+import {LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT, LG_KWH_TITLE} from '../lang/lang-fr';
 
 
 export class PageBalanceEdit extends LitElement {
@@ -56,12 +58,23 @@ export class PageBalanceEdit extends LitElement {
 		this.inputsList = [];
 	}
 	
+	set seriesKWH(value) {
+		this._seriesKWH = value;
+		if (!this._domPieChart) return;
+		
+		this._updatePie(this._domPieChart, this.seriesKWH || []);
+	}
+	
+	get seriesKWH() {
+		return this._seriesKWH;
+	}
+	
+	
 	//<editor-fold desc="# Renderers">
 	
 	render() {
 		// noinspection CssUnresolvedCustomProperty
-		return html`
-<style>
+		return html`<style>
 	:host {
 		width: 100%;
 		
@@ -76,36 +89,44 @@ export class PageBalanceEdit extends LitElement {
 		width: 100%;
 		height: 100%;
 	}
+	
 	.top-container {
 		flex: auto;
 		display: flex;
-	    justify-content: space-between;
+		justify-content: space-between;
 		
 		overflow: auto;
 	}
+	
 	.child-main {
 		width: calc(50% - 0.5em);
 		padding-bottom: 0.2em;
 	}
+	
 	.action-menu {
 		flex-shrink: 0;
 		display: flex;
 		justify-content: space-between;
 		padding: 0.8em 1em 1em;
 	}
+	
 	.action-menu paper-button:not([disabled]) {
 		background-color: white;
 		color: var(--app-card-text-color);
 	}
+	
 	.action-menu paper-button {
 		margin: 0 0 0 1em;
 	}
+	
 	.action-menu > a:first-child > paper-button {
 		margin: 0;
 	}
+	
 	.action-menu a {
 		text-decoration: none;
 	}
+	
 	/**</editor-fold>*/
 	
 	/**<editor-fold desc="style for input">*/
@@ -115,40 +136,58 @@ export class PageBalanceEdit extends LitElement {
 		padding-right: 0.5em;
 		overflow-y: auto;
 	}
+	
 	.consumption-input-btn-add:not([disabled]) {
 		margin-top: 1em;
 		
 		background-color: var(--paper-green-500);
 		color: white;
 	}
+	
 	.category-label {
 		margin-bottom: 1em;
 	}
+	
 	.input-tab paper-button {
 		margin-bottom: 1em;
 		
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
 	}
+	
 	.input-tab paper-button[selected] {
 		background-color: var(--app-primary-color);
 		color: var(--app-secondary-text-color);
 	}
-	.coefs-title{
+	
+	.coefs-title {
 		margin-bottom: 1em;
 	}
-	.coef-item-label{
+	
+	.coef-item-label {
 		margin-bottom: 1em;
 	}
+	
 	/**</editor-fold>*/
 	
 	/**<editor-fold desc="style for balance list">*/
+	.input-details {
+		display: flex;
+		flex-direction: column;
+		
+		overflow-y: auto;
+	}
+	.input-graph {
+		margin: 1em 1em 0 0.5em;
+		padding: 1em;
+	}
+	
 	.consumption-list {
 		padding-top: 1em;
 		padding-left: 0.5em;
 		padding-right: 1em;
-		overflow-y: auto;
 	}
+	
 	.balance-item {
 		display: flex;
 		flex-direction: column;
@@ -158,43 +197,53 @@ export class PageBalanceEdit extends LitElement {
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
 	}
+	
 	.balance-item-type {
 		display: flex;
 		align-items: baseline;
 	}
+	
 	.balance-item-2nd-row {
 		display: flex;
 		overflow: auto;
 		
 		font-size: 0.85em;
 	}
+	
 	.balance-item-type > paper-icon-button {
 		margin-left: auto;
 		color: var(--app-sub-text-color);
 	}
+	
 	.balance-item-type > paper-icon-button:hover {
 		color: var(--app-card-text-color);
 	}
+	
 	.balance-item-coefs {
 		display: flex;
 		flex-direction: row;
 		
 		flex: auto;
 	}
+	
 	.balance-item-coef {
 		margin-left: 1em;
 		width: calc(25% - 1em);
 	}
+	
 	.balance-item-coef-title {
 		color: var(--app-sub-text-color);
 	}
+	
 	.balance-item-coef-value {
 		text-align: center;
 	}
+	
 	.balance-item-value {
 		margin-left: 1em;
 		min-width: 4em;
 	}
+	
 	/**</editor-fold>*/
 	
 	
@@ -207,11 +256,12 @@ export class PageBalanceEdit extends LitElement {
 			width: 100%;
 			padding: 1em;
 		}
+		
 		.consumption-list {
 			padding-bottom: 0.2em;
 		}
 	}
-	
+
 </style>
 
 <main>
@@ -223,8 +273,32 @@ export class PageBalanceEdit extends LitElement {
 			<paper-button class="consumption-input-btn-add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" ?raised="${this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
 		</div>
 		
-		<div class="child-main consumption-list">
-			${this._render_balanceInputList(this.inputsList)}
+		<div class="child-main input-details">
+			<paper-card class="input-graph">
+					<highcharts-chart
+						type="pie"
+						title="${LG_KWH_TITLE}"
+						.options="${{
+			chart: {
+				style: {
+					'fontFamily': `"Open Sans", Verdana, Arial, Helvetica, sans-serif`,
+					'fontSize': '1em',
+				},
+			},
+			title: {
+				verticalAlign: 'bottom',
+				style: {
+					'fontSize': '1em',
+				},
+			},
+		}}"
+						
+						@chart-ready="${({detail}) => this._setupChartKWH(detail)}"
+					></highcharts-chart>
+			</paper-card>
+			<div class="consumption-list">
+				${this._render_balanceInputList(this.inputsList)}
+			</div>
 		</div>
 	</div>
 	
@@ -458,6 +532,40 @@ export class PageBalanceEdit extends LitElement {
 		
 		this.addSelection(calculateConsumption(ref));
 		this.clearSelection();
+	}
+	
+	/**
+	 * @param {HighchartsChart} domPieChart
+	 * @private
+	 */
+	_setupChartKWH(domPieChart) {
+		this._domPieChart = domPieChart;
+		
+		domPieChart.chart.addSeries({
+			type: 'pie',
+			colorByPoint: true,
+			data: [],
+			size: '75%',
+			dataLabels: {
+				enabled: true,
+				format: `{point.name}: {point.y:,.1f} kWh`,
+				style: {
+					'fontSize': '0.7em',
+				},
+			},
+			tooltip: {
+				enabled: true,
+				pointFormat: `{point.y:,.1f} kWh`,
+			},
+		});
+		
+		this._updatePie(domPieChart, this.seriesKWH || []);
+	}
+	
+	_updatePie(pieChart, data) {
+		if (!pieChart || !pieChart.chart) return;
+		
+		pieChart.chart.series[0].setData(data, true, true);
 	}
 	
 	
