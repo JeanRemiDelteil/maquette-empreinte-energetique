@@ -6,10 +6,10 @@ import './qr-code';
 import {LG_ACTION_FOOTPRINT_EDIT, LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
-export class PageLinkBalance extends LitElement {
+export class PageBalanceLink extends LitElement {
 	
 	static get is() {
-		return 'page-link-balance';
+		return 'page-balance-link';
 	}
 	
 	// noinspection JSUnusedGlobalSymbols

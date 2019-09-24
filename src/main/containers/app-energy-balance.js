@@ -19,9 +19,9 @@ const router = new Router([
 			&& id !== getBalanceId(getBalance(store.getState()))
 			&& store.dispatch(loadBalance(id));
 			
-			return html`<app-link-balance></app-link-balance>`;
+			return html`<app-balance-link></app-balance-link>`;
 		},
-		importLazy: () => import('../containers/app-link-balance'),
+		importLazy: () => import('./app-balance-link'),
 	},
 	{
 		name: 'Edit',
@@ -33,9 +33,9 @@ const router = new Router([
 			&& id !== getBalanceId(getBalance(store.getState()))
 			&& store.dispatch(loadBalance(id));
 			
-			return html`<app-edit-balance></app-edit-balance>`;
+			return html`<app-balance-edit></app-balance-edit>`;
 		},
-		importLazy: () => import('../containers/app-edit-balance'),
+		importLazy: () => import('./app-balance-edit'),
 	},
 	{
 		name: 'Graphs',
@@ -47,16 +47,16 @@ const router = new Router([
 			&& id !== getBalanceId(getBalance(store.getState()))
 			&& store.dispatch(loadBalance(id));
 			
-			return html`<app-show-balance></app-show-balance>`;
+			return html`<app-balance-show></app-balance-show>`;
 		},
-		importLazy: () => import('../containers/app-show-balance'),
+		importLazy: () => import('./app-balance-show'),
 	},
 	{
 		name: 'Create',
 		pattern: /^\/empreinte-energie(?:\/.*)?$/,
 		
-		load: () => html`<app-new-balance></app-new-balance>`,
-		importLazy: () => import('../containers/app-new-balance'),
+		load: () => html`<app-balance-new></app-balance-new>`,
+		importLazy: () => import('./app-balance-new'),
 	},
 ]);
 

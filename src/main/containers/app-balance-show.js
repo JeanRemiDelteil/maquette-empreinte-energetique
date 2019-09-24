@@ -1,4 +1,4 @@
-import {PageShowBalance} from '../elements/page-show-balance';
+import {PageBalanceShow} from '../elements/page-balance-show';
 import {connect} from '../store/store';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
 import {getDrilldownData, processAggregates} from '../lib/dataConverter';
@@ -7,10 +7,10 @@ import {getDrilldownData, processAggregates} from '../lib/dataConverter';
 const COEF_SLAVES = 1919;
 const NATIONAL_MEAN = 8100;
 
-export class AppShowBalance extends connect(PageShowBalance) {
+export class AppBalanceShow extends connect(PageBalanceShow) {
 	
 	static get is() {
-		return 'app-show-balance';
+		return 'app-balance-show';
 	}
 	
 	constructor() {

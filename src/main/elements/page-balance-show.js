@@ -28,10 +28,10 @@ const PIE_CHART_KW_SUB = 'pieChart-kW-sub';
 const COLUMN_CHART_COMPARE_NATIONAL_MEAN = 'COLUMN_CHART_COMPARE_NATIONAL_MEAN';
 
 
-export class PageShowBalance extends LitElement {
+export class PageBalanceShow extends LitElement {
 	
 	static get is() {
-		return 'page-show-balance';
+		return 'page-balance-show';
 	}
 	
 	static get properties() {

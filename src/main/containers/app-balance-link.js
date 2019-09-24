@@ -1,12 +1,12 @@
 import {connect} from '../store/store';
 import {getBalance, getBalanceId} from '../store/reducers/energyBalance/selectors';
-import {PageLinkBalance} from '../elements/page-link-balance';
+import {PageBalanceLink} from '../elements/page-balance-link';
 
 
-export class AppLinkBalance extends connect(PageLinkBalance) {
+export class AppBalanceLink extends connect(PageBalanceLink) {
 	
 	static get is() {
-		return 'app-link-balance';
+		return 'app-balance-link';
 	}
 	
 	constructor() {

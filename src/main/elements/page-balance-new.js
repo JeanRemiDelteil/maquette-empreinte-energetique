@@ -4,10 +4,10 @@ import '@polymer/paper-button/paper-button';
 import {LG_NEW_E_FOOTPRINT, LG_START} from '../lang/lang-fr';
 
 
-export class PageNewBalance extends LitElement {
+export class PageBalanceNew extends LitElement {
 	
 	static get is() {
-		return 'page-new-balance';
+		return 'page-balance-new';
 	}
 	
 	render() {

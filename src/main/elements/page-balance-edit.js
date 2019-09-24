@@ -8,10 +8,10 @@ import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
 import {LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
 
-export class PageEditBalance extends LitElement {
+export class PageBalanceEdit extends LitElement {
 	
 	static get is() {
-		return 'page-edit-balance';
+		return 'page-balance-edit';
 	}
 	
 	static get properties() {

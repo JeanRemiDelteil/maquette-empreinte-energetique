@@ -1,12 +1,12 @@
 import {connect} from '../store/store';
-import {PageNewBalance} from '../elements/page-new-balance';
+import {PageBalanceNew} from '../elements/page-balance-new';
 import {create} from '../store/reducers/energyBalance/actions';
 
 
-export class AppNewBalance extends connect(PageNewBalance) {
+export class AppBalanceNew extends connect(PageBalanceNew) {
 	
 	static get is() {
-		return 'app-new-balance';
+		return 'app-balance-new';
 	}
 	
 	
