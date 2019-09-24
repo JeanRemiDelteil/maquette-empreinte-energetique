@@ -201,6 +201,21 @@ export class PageBalanceEdit extends LitElement {
 		margin-bottom: 1em;
 	}
 	
+	.category-items {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.choice-item {
+		width: calc(100% / 4 - 1em);
+		height: 8em;
+		
+		margin: 0.5em;
+	}
+	.coef-item paper-button {
+		min-width: 7em;
+		height: 4em;
+	}
+	
 	/**</editor-fold>*/
 	
 	/**<editor-fold desc="style for balance list">*/
@@ -281,6 +296,16 @@ export class PageBalanceEdit extends LitElement {
 	/**</editor-fold>*/
 	
 	
+	@media screen and (max-width: 1600px) {
+		.choice-item {
+			width: calc(100% / 3 - 1em);
+		}
+	}
+	@media screen and (max-width: 1200px) {
+		.choice-item {
+			width: calc(100% / 2 - 1em);
+		}
+	}
 	@media screen and (max-width: 900px) {
 		.top-container {
 			flex-wrap: wrap;
@@ -293,6 +318,15 @@ export class PageBalanceEdit extends LitElement {
 		
 		.consumption-list {
 			padding-bottom: 0.2em;
+		}
+		
+		.choice-item {
+			width: calc(100% / 3 - 1em);
+		}
+	}
+	@media screen and (max-width: 700px) {
+		.choice-item {
+			width: calc(100% / 2 - 1em);
 		}
 	}
 
@@ -407,8 +441,8 @@ export class PageBalanceEdit extends LitElement {
 	 */
 	_render_category(category, index, selectedChoice, breadcrubs = []) {
 		return html`
-<div class="category-label">> ${category.label}</div>
-<div>
+<h2 class="category-label">${category.label}</h2>
+<div class="category-items">
 	${this._render_choices(Object.keys(category.values), index, selectedChoice)}
 </div>
 `;
@@ -422,8 +456,8 @@ export class PageBalanceEdit extends LitElement {
 		this._selectedCoefs = coefs;
 		
 		return html`
-<div class="coefs-title">Paramètres</div>
-<div>
+<h2 class="coefs-title">Paramètres</h2>
+<div class="coefs-items">
 	${coefs.coefs.map(coef => html`
 	<div class="coef-item">
 		<div class="coef-item-label">${coef.label}</div>
