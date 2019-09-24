@@ -63,6 +63,7 @@ export class PageBalanceShow extends LitElement {
 		this._chartMap = {
 			[PIE_CHART_KW]: null,
 			[PIE_CHART_KW_SUB]: null,
+			[COLUMN_CHART_COMPARE_NATIONAL_MEAN]: null,
 		};
 		
 		Highcharts.setOptions({
@@ -70,6 +71,8 @@ export class PageBalanceShow extends LitElement {
 				noData: LG_NO_DATA,
 			},
 		});
+		
+		this._onResize = this._onResize.bind(this);
 	}
 	
 	//<editor-fold desc="# Renderers">
@@ -322,10 +325,7 @@ export class PageBalanceShow extends LitElement {
 			maxFontSize: 300,
 		});
 		
-		// listen to global app resize event
-		window.addEventListener('app-resize', () => this._onResize());
 	}
-	
 	
 	updated(changedProperties) {
 		
@@ -351,6 +351,20 @@ export class PageBalanceShow extends LitElement {
 			}
 		});
 		
+	}
+	
+	connectedCallback() {
+		super.connectedCallback();
+		
+		// listen to global app resize event
+		window.addEventListener('app-resize', this._onResize);
+	}
+	
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		
+		// remove to global app resize event
+		window.removeEventListener('app-resize', this._onResize);
 	}
 	
 	//</editor-fold>
