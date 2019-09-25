@@ -177,6 +177,7 @@ export class PageBalanceShow extends LitElement {
 	
 		.top-container {
 			align-content: unset;
+			padding: 1em;
 		}
 	
 		.child-container {
@@ -188,6 +189,12 @@ export class PageBalanceShow extends LitElement {
 		.child-container:last-child {
             margin-bottom: 0;
 		}
+		
+		.action-menu {
+			box-shadow: 0 0 5px 2px #0000004d;
+			z-index: 1;
+		}
+		
 	}
 	
 	

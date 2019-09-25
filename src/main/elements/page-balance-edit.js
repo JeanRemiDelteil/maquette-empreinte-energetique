@@ -74,7 +74,8 @@ export class PageBalanceEdit extends LitElement {
 	
 	render() {
 		// noinspection CssUnresolvedCustomProperty
-		return html`<style>
+		return html`
+<style>
 	:host {
 		width: 100%;
 		
@@ -182,8 +183,6 @@ export class PageBalanceEdit extends LitElement {
 	}
 	
 	.input-tab paper-button {
-		margin-bottom: 1em;
-		
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
 	}
@@ -309,6 +308,11 @@ export class PageBalanceEdit extends LitElement {
 	@media screen and (max-width: 900px) {
 		.top-container {
 			flex-wrap: wrap;
+		}
+		
+		.action-menu {
+			box-shadow: 0 0 5px 2px #0000004d;
+			z-index: 1;
 		}
 		
 		.child-main {
