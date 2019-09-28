@@ -1,7 +1,7 @@
 /**
  * @type {BuildConfig}
  */
-export default {
+module.exports = {
 	outputFolder: 'build/src/dev',
 	
 	copy: [
