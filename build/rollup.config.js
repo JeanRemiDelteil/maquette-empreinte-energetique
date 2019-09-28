@@ -32,10 +32,10 @@ async function getRollUpConfig() {
 	// Pre build Clean up of the output folder
 	await new Promise(res => rimraf(`./${config.outputFolder}/**`, res));
 	
-	return rollUpConfigs.filter((value, index) => !(noLegacyBuild && index === 1))
+	return rollUpConfigs.filter((value, index) => true)
 		.map((rollUpConfig, index) => {
 			
-			const modernBuild = index === 0;
+			const modernBuild = index === 1;
 			
 			return {
 				...rollUpConfig,
@@ -81,7 +81,7 @@ async function getRollUpConfig() {
 						bundlesRelative: true,
 					}),
 					
-					serve && runCmd({
+					modernBuild && serve && runCmd({
 						cmd: `cd ./${config.outputFolder} && superstatic --port 5000 --host localhost`,
 						runOnce: true,
 					}),

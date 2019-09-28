@@ -36,6 +36,9 @@ export class QrCode extends LitElement {
 		display: block;
 		margin: auto;
 		height: 100%;
+		
+		/* Bad fix for Safari */
+		min-width: 200px;
 	}
 </style>
 
