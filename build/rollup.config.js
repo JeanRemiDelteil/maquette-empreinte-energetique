@@ -7,9 +7,7 @@ import jsonPlugin from 'rollup-plugin-json';
 import virtualModule from './plugin/rollup-plugin-virtual-processed';
 import copy from 'rollup-plugin-copy';
 import visualizer from 'rollup-plugin-visualizer';
-
-import configFromSource from '../src/main/config.json';
-
+import {patchJSONs} from './plugin/loader-json-config';
 
 async function getRollUpConfig() {
 	const noLegacyBuild = process.env['noLegacyBuild'] || false;
@@ -21,10 +19,8 @@ async function getRollUpConfig() {
 	 * @type {BuildConfig}
 	 */
 	const config = await import(`./config/${target}_config.js`);
-	const srcConfig = {
-		...configFromSource,
-		...config.config,
-	};
+	const jsonPatched = await patchJSONs(config.patchJson || {});
+	
 	const generateSourceMap = config.sourceMap === undefined ? true : config.sourceMap;
 	
 	
@@ -38,70 +34,67 @@ async function getRollUpConfig() {
 	
 	return rollUpConfigs.filter((value, index) => !(noLegacyBuild && index === 1))
 		.map((rollUpConfig, index) => {
-		
-		const modernBuild = index === 0;
-		
-		return {
-			...rollUpConfig,
 			
-			output: {
-				...rollUpConfig.output,
-				sourcemap: generateSourceMap,
-			},
+			const modernBuild = index === 0;
 			
-			'plugins': [
-				// Import config from build config
-				virtualModule({
-					'src/main/config.json': JSON.stringify(srcConfig),
-				}),
+			return {
+				...rollUpConfig,
 				
-				// Resolve commonJS modules
-				commonjs(),
-				...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
-				
-				
-				jsonPlugin({
-					exclude: ['node_modules/**'],
-					preferConst: true,
-				}),
-				
-				// Only copy files for first build
-				modernBuild && copy({
-					targets: [
-						{
-							src: [
-								'src/firebase.json',
-								'src/.firebaserc',
-							],
-							dest: `./${config.outputFolder}`,
-						},
-					],
-					copyOnce: true,
-				}),
-				
-				// Minification
-				production && terser({
+				output: {
+					...rollUpConfig.output,
 					sourcemap: generateSourceMap,
-				}),
-				modernBuild && visualizer({
-					template: 'treemap',
-					bundlesRelative: true,
-				}),
+				},
 				
-				serve && runCmd({
-					cmd: `cd ./${config.outputFolder} && superstatic --port 5000 --host localhost`,
-					runOnce: true,
-				}),
-			],
-			
-			'onwarn'(warning, rollupWarn) {
-				// Shush CIRCULAR_DEPENDENCY for node_modules only
-				if (warning.code === 'CIRCULAR_DEPENDENCY' && /^node_modules[\\/]/.test(warning['importer'])) return;
+				'plugins': [
+					// Import config from build config
+					virtualModule(jsonPatched),
+					
+					// Resolve commonJS modules
+					commonjs(),
+					...rollUpConfig.plugins.filter(plugin => !/^terser$/.test(plugin.name)),
+					
+					
+					jsonPlugin({
+						exclude: ['node_modules/**'],
+						preferConst: true,
+					}),
+					
+					// Only copy files for first build
+					modernBuild && copy({
+						targets: [
+							{
+								src: [
+									...config.copy,
+								],
+								dest: `./${config.outputFolder}`,
+							},
+						],
+						copyOnce: true,
+					}),
+					
+					// Minification
+					production && terser({
+						sourcemap: generateSourceMap,
+					}),
+					modernBuild && visualizer({
+						template: 'treemap',
+						bundlesRelative: true,
+					}),
+					
+					serve && runCmd({
+						cmd: `cd ./${config.outputFolder} && superstatic --port 5000 --host localhost`,
+						runOnce: true,
+					}),
+				],
 				
-				rollupWarn(warning);
-			},
-		};
-	});
+				'onwarn'(warning, rollupWarn) {
+					// Shush CIRCULAR_DEPENDENCY for node_modules only
+					if (warning.code === 'CIRCULAR_DEPENDENCY' && /^node_modules[\\/]/.test(warning['importer'])) return;
+					
+					rollupWarn(warning);
+				},
+			};
+		});
 }
 
 

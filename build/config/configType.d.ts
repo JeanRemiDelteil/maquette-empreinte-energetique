@@ -1,9 +1,9 @@
 declare interface BuildConfig {
-	outputFolder: string
+	outputFolder: string;
 	
-	sourceMap: boolean
+	sourceMap: boolean;
 	
-	config: {
-		env: string
-	}
+	copy: string[];
+	
+	patchJson: { [path: string]: {} };
 }

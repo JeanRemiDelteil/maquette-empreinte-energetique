@@ -6,9 +6,27 @@ module.exports = {
 	
 	sourceMap: false,
 	
+	copy: [
+		'src/firebase.json',
+		'build/config/prod/.firebaserc',
+	],
+	
 	// changes here will need restarting watch to take effects
-	// Patch the /src/main/config.json file
-	config: {
-		env: 'production',
+	patchJson: {
+		// Patch the /src/main/config.json file
+		'src/main/config.json': {
+			env: 'production',
+			firebaseConfig: {
+				apiKey: "AIzaSyAHBU0tDjI2N8nlivaTezG5JAAdotX1Usk",
+				authDomain: "empreinte-energie.firebaseapp.com",
+				databaseURL: "https://empreinte-energie.firebaseio.com",
+				projectId: "empreinte-energie",
+				appId: "1:1025624645904:web:d97fc6d3d3030053424595",
+			},
+			configInputData: {
+				"path": "1lcNwVMs0xgJOpy1xIxAfeNNrPndzWcevbUG258HmQHU!Inputs!A3:M",
+				"apiKey": "AIzaSyA4T9FTPAde5hKOG2ROjVT9HOAIoMrjZ64",
+			},
+		},
 	},
 };
