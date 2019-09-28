@@ -6,9 +6,16 @@ module.exports = {
 	
 	sourceMap: false,
 	
+	copy: [
+		'src/firebase.json',
+		'build/config/prod/.firebaserc',
+	],
+	
 	// changes here will need restarting watch to take effects
-	// Patch the /src/main/config.json file
-	config: {
-		env: 'production',
+	patchJson: {
+		// Patch the /src/main/config.json file
+		'src/main/config.json': {
+			env: 'production',
+		},
 	},
 };
