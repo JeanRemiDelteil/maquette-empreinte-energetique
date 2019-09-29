@@ -432,14 +432,14 @@ export class PageBalanceShow extends LitElement {
 			},
 			dataLabels: {
 				enabled: true,
-				format: `{point.y:,.1f} kWh`,
+				format: `{point.y:,.0f} kWh`,
 				style: {
 					'fontSize': '0.7em',
 				},
 			},
 			tooltip: {
 				enabled: true,
-				pointFormat: `{point.y:,.1f} kWh`,
+				pointFormat: `{point.y:,.0f} kWh`,
 			},
 			...additionalOptions,
 		});
@@ -462,14 +462,14 @@ export class PageBalanceShow extends LitElement {
 			size: '75%',
 			dataLabels: {
 				enabled: true,
-				format: `{point.name}: {point.y:,.1f} kWh`,
+				format: `{point.name}: {point.y:,.0f} kWh`,
 				style: {
 					'fontSize': '0.7em',
 				},
 			},
 			tooltip: {
 				enabled: true,
-				pointFormat: `{point.y:,.1f} kWh`,
+				pointFormat: `{point.y:,.0f} kWh`,
 			},
 			// allowPointSelect: true,
 			...additionalOptions,
