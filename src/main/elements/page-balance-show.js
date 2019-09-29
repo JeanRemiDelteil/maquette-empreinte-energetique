@@ -146,6 +146,7 @@ export class PageBalanceShow extends LitElement {
 	.slave-container {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		
 		color: #434348;
 	}
@@ -156,7 +157,8 @@ export class PageBalanceShow extends LitElement {
 	.slave-words {
 		display: flex;
 		flex-direction: column;
-		width: 60%;
+		justify-content: center;
+		max-width: 60%;
 		height: 50%;
 		
 		box-sizing: content-box;
@@ -165,10 +167,12 @@ export class PageBalanceShow extends LitElement {
 	.slave-words > .slave-number {
 		width: 100%;
 		height: 80%;
+		text-align: center;
 	}
 	.slave-words > div {
 		width: 100%;
 		height: 20%;
+		text-align: center;
 	}
 	/**</editor-fold>*/
 	
@@ -324,14 +328,11 @@ export class PageBalanceShow extends LitElement {
 	//<editor-fold desc="# LitElement lifecycle">
 	
 	firstUpdated(_changedProperties) {
+		this._domSlaveWord = this.shadowRoot.querySelector('.slave-words');
 		this._domSlaveNum = this.shadowRoot.querySelector('.slave-number');
 		this._domSlaveText = this.shadowRoot.querySelector('.slave-text');
 		
-		textFit(this._domSlaveText, {
-			minFontSize: 6,
-			maxFontSize: 300,
-		});
-		
+		this._fitSlaveText();
 	}
 	
 	updated(changedProperties) {
@@ -483,10 +484,38 @@ export class PageBalanceShow extends LitElement {
 	 */
 	_formatSlavesNumber(num) {
 		this._domSlaveNum.innerHTML = num.toLocaleString(undefined, {maximumFractionDigits: 1});
+		this._fitSlaveText();
+	}
+	
+	_fitSlaveText() {
+		this._domSlaveWord.style.width = '60%';
+		this._domSlaveNum.style.width = '';
+		this._domSlaveNum.style.height = '';
+		this._domSlaveText.style.width = '';
+		this._domSlaveText.style.height = '';
+		
 		textFit(this._domSlaveNum, {
 			minFontSize: 6,
 			maxFontSize: 300,
 		});
+		textFit(this._domSlaveText, {
+			minFontSize: 6,
+			maxFontSize: 300,
+		});
+		
+		const slaveNumBBox = this._domSlaveNum
+			.querySelector('.textFitted')
+			.getBoundingClientRect();
+		const slaveTextBBox = this._domSlaveText
+			.querySelector('.textFitted')
+			.getBoundingClientRect();
+		const maxWidth = Math.max(slaveNumBBox.width, slaveTextBBox.width);
+		
+		this._domSlaveNum.style.width = `${maxWidth}px`;
+		this._domSlaveNum.style.height = `${slaveNumBBox.height}px`;
+		this._domSlaveText.style.width = `${maxWidth}px`;
+		this._domSlaveText.style.height = `${slaveTextBBox.height}px`;
+		this._domSlaveWord.style.width = '';
 	}
 	
 	_buildColumnConsumptionSeries() {
@@ -505,13 +534,6 @@ export class PageBalanceShow extends LitElement {
 	}
 	
 	_onResize() {
-		textFit(this._domSlaveNum, {
-			minFontSize: 6,
-			maxFontSize: 300,
-		});
-		textFit(this._domSlaveText, {
-			minFontSize: 6,
-			maxFontSize: 300,
-		});
+		this._fitSlaveText();
 	}
 }
