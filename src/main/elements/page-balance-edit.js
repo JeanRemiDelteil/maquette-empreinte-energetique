@@ -220,6 +220,7 @@ export class PageBalanceEdit extends LitElement {
 	.coef-item paper-button {
 		min-width: 7em;
 		height: 4em;
+		margin: 0.5em;
 	}
 	
 	/**</editor-fold>*/
