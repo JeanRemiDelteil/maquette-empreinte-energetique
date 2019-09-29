@@ -1,7 +1,10 @@
 import {html, LitElement} from 'lit-element';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
+import '@polymer/iron-icon/iron-icon';
 
+
+import './icon-set';
 import './qr-code';
 import {LG_ACTION_FOOTPRINT_EDIT, LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT} from '../lang/lang-fr';
 
@@ -51,12 +54,19 @@ export class PageBalanceLink extends LitElement {
 	.action-menu paper-button {
 		margin: 0 0 0 1em;
 	}
+	.action-menu paper-button > iron-icon{
+		margin-right: 1em;
+	}
 	.action-menu > a:first-child > paper-button {
 		margin: 0;
 	}
 	.action-menu a {
 		text-decoration: none;
 	}
+	.btn-return-create > paper-button:not([disabled]) {
+		color: var(--paper-green-500);
+	}
+	
 	/**</editor-fold>*/
 	
 	.top-container {
@@ -74,6 +84,15 @@ export class PageBalanceLink extends LitElement {
 		width: 60%;
 		height: 60%;
 	}
+	
+	@media screen and (max-width: 700px){
+		.action-menu paper-button > iron-icon{
+			margin-right: 0;
+		}
+		.action-menu paper-button > span{
+			display: none;
+		}
+	}
 
 </style>
 
@@ -84,13 +103,22 @@ export class PageBalanceLink extends LitElement {
 	
 	<div class="action-menu">
 		<a class="btn-return-create" href="/empreinte-energie/create">
-			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:new-file"></iron-icon>
+				<span>${LG_CREATE_NEW_E_FOOTPRINT}</span>
+			</paper-button>
 		</a>
 		<a class="btn-show-edit" href="/empreinte-energie/${this.id}/modifier">
-			<paper-button raised>${LG_ACTION_FOOTPRINT_EDIT}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:edit"></iron-icon>
+				<span>${LG_ACTION_FOOTPRINT_EDIT}</span>
+			</paper-button>
 		</a>
 		<a class="btn-show-link" href="/empreinte-energie/${this.id}/graphiques">
-			<paper-button raised>${LG_ACTION_STATISTICS}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:pie-chart"></iron-icon>
+				<span>${LG_ACTION_STATISTICS}</span>
+			</paper-button>
 		</a>
 	</div>
 </main>

@@ -120,6 +120,9 @@ export class PageBalanceEdit extends LitElement {
 	.action-menu paper-button {
 		margin: 0 0 0 1em;
 	}
+	.action-menu paper-button > iron-icon{
+		margin-right: 1em;
+	}
 	
 	.action-menu > a:first-child > paper-button {
 		margin: 0;
@@ -129,6 +132,9 @@ export class PageBalanceEdit extends LitElement {
 		text-decoration: none;
 	}
 	
+	.btn-return-create > paper-button:not([disabled]) {
+		color: var(--paper-green-500);
+	}
 	/**</editor-fold>*/
 	
 	/**<editor-fold desc="style for input">*/
@@ -192,6 +198,7 @@ export class PageBalanceEdit extends LitElement {
 	.input-tab paper-button {
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
+		text-align: center;
 	}
 	
 	.input-tab paper-button[selected] {
@@ -340,6 +347,13 @@ export class PageBalanceEdit extends LitElement {
 		.choice-item {
 			width: calc(100% / 2 - 1em);
 		}
+		
+		.action-menu paper-button > iron-icon{
+			margin-right: 0;
+		}
+		.action-menu paper-button > span{
+			display: none;
+		}
 	}
 
 </style>
@@ -390,10 +404,16 @@ export class PageBalanceEdit extends LitElement {
 	
 	<div class="action-menu">
 		<a class="btn-return-create" href="/empreinte-energie/create">
-			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:new-file"></iron-icon>
+				<span>${LG_CREATE_NEW_E_FOOTPRINT}</span>
+			</paper-button>
 		</a>
 		<a class="btn-show-stats" href="/empreinte-energie/${this.id}/graphiques">
-			<paper-button raised>${LG_ACTION_STATISTICS}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:pie-chart"></iron-icon>
+				<span>${LG_ACTION_STATISTICS}</span>
+			</paper-button>
 		</a>
 	</div>
 </main>

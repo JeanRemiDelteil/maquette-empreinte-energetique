@@ -107,12 +107,18 @@ export class PageBalanceShow extends LitElement {
 	.action-menu paper-button {
 		margin: 0 0 0 1em;
 	}
+	.action-menu paper-button > iron-icon{
+		margin-right: 1em;
+	}
 	.action-menu > a:first-child > paper-button {
 		margin: 0;
 	}
 	.action-menu a {
 		text-decoration: none;
 	}
+	.btn-return-create > paper-button:not([disabled]) {
+		color: var(--paper-green-500);
+	}	
 	/**</editor-fold>*/
 	
 	.top-container {
@@ -199,6 +205,15 @@ export class PageBalanceShow extends LitElement {
 			z-index: 1;
 		}
 		
+	}
+	
+	@media screen and (max-width: 700px){
+		.action-menu paper-button > iron-icon{
+			margin-right: 0;
+		}
+		.action-menu paper-button > span{
+			display: none;
+		}
 	}
 	
 	
@@ -310,13 +325,22 @@ export class PageBalanceShow extends LitElement {
 	
 	<div class="action-menu">
 		<a class="btn-return-create" href="/empreinte-energie/create">
-			<paper-button raised>${LG_CREATE_NEW_E_FOOTPRINT}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:new-file"></iron-icon>
+				<span>${LG_CREATE_NEW_E_FOOTPRINT}</span>
+			</paper-button>
 		</a>
 		<a class="btn-show-edit" href="/empreinte-energie/${this.id}/modifier">
-			<paper-button raised>${LG_ACTION_FOOTPRINT_EDIT}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:edit"></iron-icon>
+				<span>${LG_ACTION_FOOTPRINT_EDIT}</span>
+			</paper-button>
 		</a>
 		<a class="btn-show-link" href="/empreinte-energie/${this.id}/lien">
-			<paper-button raised>${LG_ACTION_FOOTPRINT_LINK}</paper-button>
+			<paper-button raised>
+				<iron-icon icon="app-icon:qr-code"></iron-icon>
+				<span>${LG_ACTION_FOOTPRINT_LINK}</span>
+			</paper-button>
 		</a>
 	</div>
 </main>
