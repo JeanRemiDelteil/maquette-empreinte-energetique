@@ -1,5 +1,6 @@
 import {html, LitElement} from 'lit-element';
 import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-fab/paper-fab';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 
@@ -132,6 +133,7 @@ export class PageBalanceEdit extends LitElement {
 	
 	/**<editor-fold desc="style for input">*/
 	.consumption-input {
+		position: relative;
 		padding-top: 1em;
 		padding-left: 1em;
 		padding-right: 0.5em;
@@ -142,12 +144,17 @@ export class PageBalanceEdit extends LitElement {
 	}
 	
 	.input-btn {
+		position: absolute;
+		right: 0;
 		display: flex;
+		align-items: center;
+		
+		margin-right: 1em;
 	}
-	.input-btn > paper-button {
+	.input-btn > paper-fab {
 		margin: 0;
 	}
-	.input-btn > paper-button:not(:first-child) {
+	.input-btn > paper-fab:not(:first-child) {
 		margin-left: 1em;
 	}
 	.consumption-input-btn-back:not([disabled]),
@@ -340,13 +347,14 @@ export class PageBalanceEdit extends LitElement {
 	
 	<div class="top-container">
 		<div class="child-main consumption-input">
+
 			<div class="input-tab-container">
 				${this._render_input(this.baseData, this.inputsData)}
 			</div>
 			<div class="input-btn">
-				<paper-button class="consumption-input-btn-cancel" ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputCancel()}">Annuler</paper-button>
-				<paper-button class="consumption-input-btn-back" ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputBack()}">Retour</paper-button>
-				<paper-button class="consumption-input-btn-add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" ?raised="${this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-button>
+				<paper-fab class="consumption-input-btn-cancel" icon="app-icon:cancel" mini ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputCancel()}">Annuler</paper-fab>
+				<paper-fab class="consumption-input-btn-back" icon="app-icon:arrow-back" mini ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputBack()}">Retour</paper-fab>
+				<paper-fab class="consumption-input-btn-add" icon="app-icon:add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" ?raised="${this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-fab>
 			</div>
 		</div>
 		
@@ -639,6 +647,7 @@ export class PageBalanceEdit extends LitElement {
 	
 	_inputBack() {
 		this.inputsData = this.inputsData.slice(0, -1);
+		this.inputsCoefs = new Map();
 	}
 	
 	_inputCancel() {
