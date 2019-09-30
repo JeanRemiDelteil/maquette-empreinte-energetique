@@ -242,7 +242,7 @@ export class PageBalanceEdit extends LitElement {
 	}
 	
 	.coef-item-label {
-		margin-bottom: 1em;
+		margin-top: 1em;
 	}
 	
 	.category-items {
