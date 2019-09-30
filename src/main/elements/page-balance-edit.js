@@ -8,8 +8,16 @@ import 'highcharts/es-modules/parts/PieSeries';
 import './highcharts-chart';
 import './icon-set';
 import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
-import {LG_ACTION_STATISTICS, LG_COEFS_INPUT_TITLE, LG_CREATE_NEW_E_FOOTPRINT, LG_KWH_TITLE} from '../lang/lang-fr';
+import {LG_ACTION_FOOTPRINT_EDIT, LG_ACTION_FOOTPRINT_LIST, LG_ACTION_STATISTICS, LG_COEFS_INPUT_TITLE, LG_CREATE_NEW_E_FOOTPRINT, LG_KWH_TITLE} from '../lang/lang-fr';
 
+
+/**
+ * @enum
+ */
+const DISPLAY_MODE = {
+	EDIT: 0,
+	LIST: 1,
+};
 
 export class PageBalanceEdit extends LitElement {
 	
@@ -26,6 +34,8 @@ export class PageBalanceEdit extends LitElement {
 			inputsCoefs: {type: Map},
 			
 			inputsList: {type: Array},
+			
+			mobileDisplayMode: {type: Number},
 		};
 	}
 	
@@ -57,6 +67,12 @@ export class PageBalanceEdit extends LitElement {
 		 * @type {Array<IS_EBalance_Input>}
 		 */
 		this.inputsList = [];
+		
+		/**
+		 * @type {DISPLAY_MODE}
+		 */
+		this.mobileDisplayMode = DISPLAY_MODE.EDIT;
+		
 	}
 	
 	set seriesKWH(value) {
@@ -138,6 +154,10 @@ export class PageBalanceEdit extends LitElement {
 	
 	.btn-return-create > paper-button:not([disabled]) {
 		color: var(--paper-green-500);
+	}
+	
+	.show-narrow-layout {
+		display: none;
 	}
 	/**</editor-fold>*/
 	
@@ -353,6 +373,19 @@ export class PageBalanceEdit extends LitElement {
 		.choice-item {
 			width: calc(100% / 3 - 1em);
 		}
+		
+		.show-narrow-layout {
+			display: inline-flex;
+		}
+		.top-container:not([mobile-layout="edit"]) .consumption-input {
+			display: none;
+		}
+		.top-container:not([mobile-layout="list"]) .input-details {
+			display: none;
+		}
+		.input-btn {
+			position: fixed;
+		}
 	}
 	@media screen and (max-width: 700px) {
 		.choice-item {
@@ -371,7 +404,7 @@ export class PageBalanceEdit extends LitElement {
 
 <main>
 	
-	<div class="top-container">
+	<div class="top-container" mobile-layout="${this.mobileDisplayMode === DISPLAY_MODE.EDIT ? 'edit' : 'list'}">
 		<div class="child-main consumption-input">
 			<div class="input-tab-container">
 				${this._render_input(this.baseData, this.inputsData)}
@@ -431,6 +464,26 @@ export class PageBalanceEdit extends LitElement {
 				<span>${LG_CREATE_NEW_E_FOOTPRINT}</span>
 			</paper-button>
 		</a>
+		
+		<paper-button
+			class="btn-menu-edit show-narrow-layout"
+			raised
+			?hidden="${this.mobileDisplayMode === DISPLAY_MODE.EDIT}"
+			@click="${() => this._onLayoutCLick(DISPLAY_MODE.EDIT)}"
+		>
+			<iron-icon icon="app-icon:edit"></iron-icon>
+			<span>${LG_ACTION_FOOTPRINT_EDIT}</span>
+		</paper-button>
+		<paper-button
+			class="btn-menu-list show-narrow-layout"
+			raised
+			?hidden="${this.mobileDisplayMode === DISPLAY_MODE.LIST}"
+			@click="${() => this._onLayoutCLick(DISPLAY_MODE.LIST)}"
+		>
+			<iron-icon icon="app-icon:list"></iron-icon>
+			<span>${LG_ACTION_FOOTPRINT_LIST}</span>
+		</paper-button>
+		
 		<a class="btn-show-stats" href="/empreinte-energie/${this.id}/graphiques">
 			<paper-button raised>
 				<iron-icon icon="app-icon:pie-chart"></iron-icon>
@@ -458,8 +511,7 @@ export class PageBalanceEdit extends LitElement {
 		const inputs = [null, ...preSelection, ...inputsData];
 		
 		window.requestAnimationFrame(() => {
-			this._domMain
-			&& this._domMain.style
+			this._domMain && this._domMain.style
 				.setProperty('--PageBalanceEdit-internal-slider-left', `-${(inputs.length - 1) * 100}%`);
 		});
 		
@@ -623,6 +675,7 @@ export class PageBalanceEdit extends LitElement {
 	
 	firstUpdated(_changedProperties) {
 		this._domMain = this.shadowRoot.querySelector('main');
+		this._domTopContainer = this.shadowRoot.querySelector('.top-container');
 	}
 	
 	//</editor-fold>
@@ -644,6 +697,8 @@ export class PageBalanceEdit extends LitElement {
 			this.inputsCoefs = new Map();
 			this._selectedCoefs = null;
 		}
+		
+		this._scrollInputToTop();
 	}
 	
 	/**
@@ -704,15 +759,20 @@ export class PageBalanceEdit extends LitElement {
 		
 		this.addSelection(calculateConsumption(ref));
 		this.clearSelection();
+		
+		this._scrollInputToTop();
 	}
 	
 	_inputBack() {
 		this.inputsData = this.inputsData.slice(0, -1);
 		this.inputsCoefs = new Map();
+		
+		this._scrollInputToTop();
 	}
 	
 	_inputCancel() {
 		this.clearSelection();
+		this._scrollInputToTop();
 	}
 	
 	/**
@@ -749,6 +809,17 @@ export class PageBalanceEdit extends LitElement {
 		pieChart.chart.series[0].setData(data, true, true);
 	}
 	
+	_onLayoutCLick(type) {
+		this.mobileDisplayMode = type;
+		
+		window.requestAnimationFrame(
+			() => window.dispatchEvent(new Event('resize')),
+		);
+	}
+	
+	_scrollInputToTop() {
+		this._domTopContainer && (this._domTopContainer.scrollTop = 0);
+	}
 	
 	/**
 	 * @param {IConsumptionRef} ref

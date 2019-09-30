@@ -3,6 +3,7 @@ export const LG_CREATE_NEW_E_FOOTPRINT = 'Nouvelle Empreinte';
 export const LG_START = 'Démarrer';
 export const LG_ACTION_STATISTICS = 'Statistiques';
 export const LG_ACTION_FOOTPRINT_EDIT = "Modifier l'empreinte";
+export const LG_ACTION_FOOTPRINT_LIST = "Afficher la saisie";
 export const LG_ACTION_FOOTPRINT_LINK = "Lien";
 
 /* 404 */
