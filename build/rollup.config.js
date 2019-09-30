@@ -1,4 +1,5 @@
 import createDefaultConfig from '@open-wc/building-rollup/modern-and-legacy-config';
+import createModernConfig from '@open-wc/building-rollup/modern-config';
 import commonjs from 'rollup-plugin-commonjs';
 import rimraf from 'rimraf';
 import runCmd from './plugin/rollup-plugin-run-command';
@@ -24,18 +25,26 @@ async function getRollUpConfig() {
 	const generateSourceMap = config.sourceMap === undefined ? true : config.sourceMap;
 	
 	
-	const rollUpConfigs = createDefaultConfig({
-		input: './src/index.html',
-		outputDir: `./${config.outputFolder}`,
-	});
+	const rollUpConfigs = noLegacyBuild
+		? [
+			createModernConfig({
+				input: './src/index.html',
+				outputDir: `./${config.outputFolder}`,
+			}),
+		]
+		: createDefaultConfig({
+			input: './src/index.html',
+			outputDir: `./${config.outputFolder}`,
+		});
 	
 	// Pre build Clean up of the output folder
 	await new Promise(res => rimraf(`./${config.outputFolder}/**`, res));
 	
-	return rollUpConfigs.filter((value, index) => true)
-		.map((rollUpConfig, index) => {
-			
-			const modernBuild = index === 1;
+	return rollUpConfigs.map((rollUpConfig, index) => {
+		
+		const modernBuild = noLegacyBuild
+			? index === 0
+			: index === 1;
 			
 			return {
 				...rollUpConfig,
@@ -81,7 +90,9 @@ async function getRollUpConfig() {
 						bundlesRelative: true,
 					}),
 					
-					modernBuild && serve && runCmd({
+					serve
+					&& index === rollUpConfigs.length - 1
+					&& runCmd({
 						cmd: `cd ./${config.outputFolder} && superstatic --port 5000 --host localhost`,
 						runOnce: true,
 					}),
