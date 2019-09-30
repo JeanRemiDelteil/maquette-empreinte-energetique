@@ -14,6 +14,7 @@ export const LG_RETURN_HOME = "Retourner en terrain connu ?";
 export const LG_KWH_TITLE = 'Consommations en kWh';
 export const LG_KWH_SUB_TITLE = (category) => `Détails: ${category ? `"${category}" ` : ''}en kWh`;
 export const LG_GRAPH_SLAVES = 'ESCLAVES';
+export const LG_GRAPH_SLAVES_TITLE = 'Equivalent énergie humaine sur 1 an';
 export const LG_NO_DATA = 'Pas de donnée à afficher';
 
 export const LG_NATIONAL_MEAN_TITLE = 'Comparaison avec la moyenne Nationale';

@@ -16,6 +16,7 @@ import {
 	LG_GRAPH_COLUMN_CURRENT_FOOTPRINT,
 	LG_GRAPH_COLUMN_NATIONAL_MEAN,
 	LG_GRAPH_SLAVES,
+	LG_GRAPH_SLAVES_TITLE,
 	LG_KWH_SUB_TITLE,
 	LG_KWH_TITLE,
 	LG_NATIONAL_MEAN_TITLE,
@@ -155,6 +156,17 @@ export class PageBalanceShow extends LitElement {
 		justify-content: center;
 		
 		color: #434348;
+	}
+	
+	.slave-title {
+		position: absolute;
+		bottom: 1.8em;
+		left: 1em;
+		right: 1em;
+		
+		font-size: 1.2em;
+		line-height: 1em;
+		text-align: center;
 	}
 	.slave-container > iron-icon {
 		width: 40%;
@@ -320,6 +332,8 @@ export class PageBalanceShow extends LitElement {
 					<div class="slave-text">${LG_GRAPH_SLAVES}</div>
 				</div>
 			</div>
+			
+			<div class="slave-title">${LG_GRAPH_SLAVES_TITLE}</div>
 		</paper-card>
 	</div>
 	
