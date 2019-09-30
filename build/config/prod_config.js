@@ -25,7 +25,7 @@ module.exports = {
 			},
 			configInputData: {
 				"path": "1lcNwVMs0xgJOpy1xIxAfeNNrPndzWcevbUG258HmQHU!Inputs!A3:M",
-				"apiKey": "AIzaSyA4T9FTPAde5hKOG2ROjVT9HOAIoMrjZ64",
+				"apiKey": "AIzaSyDRi-RwhxcYjIeCRpjPcB89e1EVQdYxr_s",
 			},
 		},
 	},
