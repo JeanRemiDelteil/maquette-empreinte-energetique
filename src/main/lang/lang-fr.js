@@ -18,3 +18,6 @@ export const LG_NO_DATA = 'Pas de donnée à afficher';
 export const LG_NATIONAL_MEAN_TITLE = 'Comparaison avec la moyenne Nationale';
 export const LG_GRAPH_COLUMN_NATIONAL_MEAN = 'Moyenne Française';
 export const LG_GRAPH_COLUMN_CURRENT_FOOTPRINT = 'Total empreinte';
+
+/* Edit balance */
+export const LG_COEFS_INPUT_TITLE = 'Paramètres';

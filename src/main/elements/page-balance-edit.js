@@ -8,7 +8,7 @@ import 'highcharts/es-modules/parts/PieSeries';
 import './highcharts-chart';
 import './icon-set';
 import {calculateConsumption, CATEGORY, COEFS, DEFAULT} from '../lib/baseData';
-import {LG_ACTION_STATISTICS, LG_CREATE_NEW_E_FOOTPRINT, LG_KWH_TITLE} from '../lang/lang-fr';
+import {LG_ACTION_STATISTICS, LG_COEFS_INPUT_TITLE, LG_CREATE_NEW_E_FOOTPRINT, LG_KWH_TITLE} from '../lang/lang-fr';
 
 
 export class PageBalanceEdit extends LitElement {
@@ -83,6 +83,10 @@ export class PageBalanceEdit extends LitElement {
 		position: relative;
 	}
 	
+	[hidden] {
+		display: none;
+	}
+	
 	/**<editor-fold desc="style main layout">*/
 	main {
 		display: flex;
@@ -154,6 +158,7 @@ export class PageBalanceEdit extends LitElement {
 		right: 0;
 		display: flex;
 		align-items: center;
+		height: 56px;
 		
 		margin-right: 1em;
 	}
@@ -163,7 +168,9 @@ export class PageBalanceEdit extends LitElement {
 	.input-btn > paper-fab:not(:first-child) {
 		margin-left: 1em;
 	}
-	.consumption-input-btn-back:not([disabled]),
+	.consumption-input-btn-back:not([disabled]) {
+		color: var(--app-card-text-color);
+	}
 	.consumption-input-btn-cancel:not([disabled]) {
 		background-color: var(--app-card-color);
 		color: var(--app-card-text-color);
@@ -191,6 +198,10 @@ export class PageBalanceEdit extends LitElement {
 		left: var(--PageBalanceEdit-internal-slider-left, 0);
 	}
 	
+	.label-container {
+		display: flex;
+		align-items: center;
+	}
 	.category-label {
 		margin-bottom: 1em;
 	}
@@ -362,14 +373,25 @@ export class PageBalanceEdit extends LitElement {
 	
 	<div class="top-container">
 		<div class="child-main consumption-input">
-
 			<div class="input-tab-container">
 				${this._render_input(this.baseData, this.inputsData)}
 			</div>
 			<div class="input-btn">
-				<paper-fab class="consumption-input-btn-cancel" icon="app-icon:cancel" mini ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputCancel()}">Annuler</paper-fab>
-				<paper-fab class="consumption-input-btn-back" icon="app-icon:arrow-back" mini ?disabled="${!this._isCancelValid(this.inputsData)}" ?raised="${this._isCancelValid(this.inputsData)}" @click="${() => this._inputBack()}">Retour</paper-fab>
-				<paper-fab class="consumption-input-btn-add" icon="app-icon:add" ?disabled="${!this._isSelectionValid(this.inputsCoefs)}" ?raised="${this._isSelectionValid(this.inputsCoefs)}" @click="${() => this._addSelection()}">Ajouter</paper-fab>
+				<paper-fab
+					class="consumption-input-btn-cancel"
+					icon="app-icon:cancel"
+					mini
+					?hidden="${!this._isCancelValid(this.inputsData)}"
+					?raised="${this._isCancelValid(this.inputsData)}"
+					@click="${() => this._inputCancel()}"
+				></paper-fab>
+				<paper-fab
+					class="consumption-input-btn-add"
+					icon="app-icon:add"
+					?hidden="${!this._isSelectionValid(this.inputsCoefs)}"
+					?raised="${this._isSelectionValid(this.inputsCoefs)}"
+					@click="${() => this._addSelection()}"
+				></paper-fab>
 			</div>
 		</div>
 		
@@ -474,7 +496,16 @@ export class PageBalanceEdit extends LitElement {
 	 */
 	_render_category(category, index, selectedChoice, breadcrubs = []) {
 		return html`
-<h2 class="category-label">${category.label}</h2>
+<div class="label-container">
+	<paper-icon-button
+		class="consumption-input-btn-back"
+		icon="app-icon:arrow-back"
+		?hidden="${!this._isCancelValid(this.inputsData)}"
+		?raised="${this._isCancelValid(this.inputsData)}"
+		@click="${() => this._inputBack()}"
+	></paper-icon-button>
+	<h2 class="category-label">${category.label}</h2>
+</div>
 <div class="category-items">
 	${this._render_choices(Object.keys(category.values), index, selectedChoice)}
 </div>
@@ -489,7 +520,16 @@ export class PageBalanceEdit extends LitElement {
 		this._selectedCoefs = coefs;
 		
 		return html`
-<h2 class="coefs-title">Paramètres</h2>
+<div class="label-container">
+	<paper-icon-button
+		class="consumption-input-btn-back"
+		icon="app-icon:arrow-back"
+		?hidden="${!this._isCancelValid(this.inputsData)}"
+		?raised="${this._isCancelValid(this.inputsData)}"
+		@click="${() => this._inputBack()}"
+	></paper-icon-button>
+	<h2 class="coefs-title">${LG_COEFS_INPUT_TITLE}</h2>
+</div>
 <div class="coefs-items">
 	${coefs.coefs.map(coef => html`
 	<div class="coef-item">
