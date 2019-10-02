@@ -205,6 +205,7 @@ export class PageBalanceShow extends LitElement {
 		.child-container {
 			width: 100%;
 			height: 50%;
+			min-height: 20em;
 			
 			margin-bottom: 1em;
 		}
