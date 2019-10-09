@@ -1,10 +1,14 @@
 import {configInputData} from '../../config.json';
 
 
-async function getRawData() {
-	const [spsId, sheetName, range] = configInputData.path.split('!');
+/**
+ * @param {string} rangePath
+ * @param {function} fallbackCallback
+ */
+async function getSheetRangeData(rangePath, fallbackCallback) {
+	const [spsId, sheetName, range] = rangePath.split('!');
 	
-	return await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spsId}/values/${sheetName}!${range}?key=${configInputData.apiKey}`)
+	return fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spsId}/values/${sheetName}!${range}?key=${configInputData.apiKey}`)
 		.then(fetchRes => fetchRes.json())
 		.then(data => {
 			if (data.error) throw data.error;
@@ -14,12 +18,32 @@ async function getRawData() {
 		})
 		.catch(async err => {
 			console.error(err);
-			console.log('Fallback to static data');
+			console.log('Fallback to static config data');
 			
-			const module = await import('./baseData.json');
-			
-			return module.default;
+			return fallbackCallback();
 		});
+}
+
+async function getRawData() {
+	return await getSheetRangeData(
+		configInputData.path,
+		async () => (await import('./baseData.json')).default,
+	);
+}
+
+/**
+ * @return {Promise<IConfigData>}
+ */
+export async function getConfigData() {
+	const data = await getSheetRangeData(
+		configInputData.configPath,
+		async () => (await import('./configData.json')).default,
+	);
+	const configData = {};
+	
+	data.forEach(([propertyName, value]) => configData[propertyName] = +(value.replace(/,/g, '')));
+	
+	return configData;
 }
 
 

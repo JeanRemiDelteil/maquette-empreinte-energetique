@@ -53,3 +53,9 @@ declare interface IBSC_OutputValues {
 	kW: number
 	CO2: number
 }
+
+
+declare interface IConfigData {
+	COEF_SLAVES: number;
+	NATIONAL_MEAN: number;
+}

@@ -43,7 +43,7 @@ export class PageBalanceShow extends LitElement {
 			detailsKwTitle: {type: String},
 			numberSlaves: {type: Number},
 			totalConsumption: {type: Number},
-			ConsumptionNationalMean: {type: Number},
+			consumptionNationalMean: {type: Number},
 		};
 	}
 	

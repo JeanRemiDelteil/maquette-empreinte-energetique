@@ -1,4 +1,4 @@
-import {BD_LOAD, BD_LOAD_FAILED, BD_LOADED, BD_STATE_EMPTY, BD_STATE_LOADED, BD_STATE_LOADING} from './types';
+import {BD_CONFIG_LOAD_FAILED, BD_CONFIG_LOADED, BD_LOAD, BD_LOAD_FAILED, BD_LOADED, BD_STATE_EMPTY, BD_STATE_LOADED, BD_STATE_LOADING} from './types';
 import {combineReducers} from 'redux';
 
 
@@ -9,6 +9,20 @@ export function data(state = [], action) {
 		
 		case BD_LOAD_FAILED:
 			return [];
+	}
+	
+	return state;
+}
+
+export function configData(state = {}, action) {
+	switch (action.type) {
+		case BD_CONFIG_LOADED:
+			return {
+				...(action.payload || {}),
+			};
+		
+		case BD_CONFIG_LOAD_FAILED:
+			return {};
 	}
 	
 	return state;
@@ -34,5 +48,6 @@ export function state(state = BD_STATE_EMPTY, action) {
 
 export const baseData = combineReducers({
 	data,
+	configData,
 	state,
 });

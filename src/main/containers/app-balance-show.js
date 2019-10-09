@@ -2,10 +2,10 @@ import {PageBalanceShow} from '../elements/page-balance-show';
 import {connect} from '../store/store';
 import {getBalance, getBalanceId, getBalanceInputs} from '../store/reducers/energyBalance/selectors';
 import {getSeriesData, processAggregates} from '../lib/dataConverter';
+import {selectConfigData} from '../store/reducers/baseData/selectors';
+import {baseDataConfigLoad} from '../store/reducers/baseData/actions';
 
-// Source: https://jancovici.com/transition-energetique/l-energie-et-nous/combien-suis-je-un-esclavagiste/
-const COEF_SLAVES = 1919;
-const NATIONAL_MEAN = 8100;
+let configDataLoaded = false;
 
 export class AppBalanceShow extends connect(PageBalanceShow) {
 	
@@ -17,6 +17,10 @@ export class AppBalanceShow extends connect(PageBalanceShow) {
 		super();
 		
 		this._old_balance = null;
+		this.configData = {};
+		
+		// Init config data
+		!configDataLoaded && this.store.dispatch(baseDataConfigLoad());
 	}
 	
 	//<editor-fold desc="# Redux callback">
@@ -24,8 +28,14 @@ export class AppBalanceShow extends connect(PageBalanceShow) {
 	// noinspection JSUnusedGlobalSymbols
 	stateChanged(state) {
 		this.balance = getBalance(state);
-		if (this.balance === this._old_balance) return;
+		if (this.balance === this._old_balance && configDataLoaded) return;
 		this._old_balance = this.balance;
+		
+		if (!configDataLoaded) {
+			this.configData = selectConfigData(state);
+			
+			configDataLoaded = Object.keys(this.configData).length !== 0;
+		}
 		
 		this.id = getBalanceId(this.balance);
 		this.inputsList = getBalanceInputs(this.balance);
@@ -36,10 +46,11 @@ export class AppBalanceShow extends connect(PageBalanceShow) {
 		// no CO2 for now
 		this.seriesKW = series.kW;
 		
-		this.numberSlaves = aggregates.values.kW / COEF_SLAVES;
+		// Source: https://jancovici.com/transition-energetique/l-energie-et-nous/combien-suis-je-un-esclavagiste/
+		this.numberSlaves = aggregates.values.kW / this.configData.COEF_SLAVES || 0;
 		
 		this.totalConsumption = aggregates.values.kW;
-		this.consumptionNationalMean = NATIONAL_MEAN;
+		this.consumptionNationalMean = this.configData.NATIONAL_MEAN;
 		
 	}
 	
